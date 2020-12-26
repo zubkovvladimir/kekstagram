@@ -3,7 +3,7 @@
 var PHOTOS_MAX_RANGE = 25;
 
 var COMMENTS_MIN_RANGE = 1;
-var COMMENTS_MAX_RANGE = 7;
+var COMMENTS_MAX_RANGE = 6;
 
 var LIKES_MIN_RANGE = 15;
 var LIKES_MAX_RANGE = 200;
@@ -27,41 +27,88 @@ var NAMES = [
   'Алина',
 ];
 
-function getRandomInt(min, max) {
+var getRandomInt = function (min, max) {
   min = Math.ceil(min);
   max = Math.floor(max);
   return Math.floor(Math.random() * (max - min + 1)) + min;
-}
-
-var getComment = function () {
-  var message = getRandomInt(0, 1) ? MESSSGES[getRandomInt(0, MESSSGES.length - 1)] : MESSSGES[getRandomInt(0, MESSSGES.length - 1)] + ' ' + MESSSGES[getRandomInt(0, MESSSGES.length - 1)];
-
-  var comment = {
-    avatar: 'img/avatar-' + getRandomInt(0, PHOTOS_MAX_RANGE) + '.svg',
-    message: message,
-    name: NAMES[getRandomInt(0, NAMES.length - 1)]
-  };
-
-  return comment;
 };
 
-var getArray = function (number) {
+var getArrayOfUniqueNumbers = function (number) {
   var array = [];
+  var randomNumber;
 
-  for (var i = 0; i <= number; i++) {
-    array.push(getComment());
+  while (array.length < number) {
+    randomNumber = getRandomInt(1, number);
+
+    if (array.indexOf(randomNumber) === -1) {
+      array.push(randomNumber);
+    }
   }
 
   return array;
 };
 
-var getPhotoItem = function () {
-  var photo = {
-    url: 'photos/' + getRandomInt(0, PHOTOS_MAX_RANGE) + '.jpg',
-    description: 'Описание фото ' + getRandomInt(0, PHOTOS_MAX_RANGE),
-    likes: getRandomInt(LIKES_MIN_RANGE, LIKES_MAX_RANGE),
-    comments: getArray(getRandomInt(COMMENTS_MIN_RANGE, COMMENTS_MAX_RANGE))
-  };
+var getCommentArray = function (number) {
+  var commentArray = [];
 
-  return photo;
+  for (var i = 0; i <= number; i++) {
+    var message = getRandomInt(0, 1) ?
+      MESSSGES[getRandomInt(0, MESSSGES.length - 1)] :
+      MESSSGES[getRandomInt(0, MESSSGES.length - 1)] + ' ' + MESSSGES[getRandomInt(0, MESSSGES.length - 1)];
+
+    var comment = {
+      avatar: 'img/avatar-' + getRandomInt(COMMENTS_MIN_RANGE, COMMENTS_MAX_RANGE) + '.svg',
+      message: message,
+      name: NAMES[getRandomInt(0, NAMES.length)]
+    };
+
+    commentArray.push(comment);
+  }
+
+  return commentArray;
 };
+
+var getPhotosArray = function (number) {
+  var arrayOfUniqueNumbers = getArrayOfUniqueNumbers(number);
+  var array = [];
+
+  for (var i = 0; i < number; i++) {
+
+    var photo = {
+      url: 'photos/' + arrayOfUniqueNumbers[i] + '.jpg',
+      description: 'Описание фото ' + getRandomInt(1, PHOTOS_MAX_RANGE),
+      likes: getRandomInt(LIKES_MIN_RANGE, LIKES_MAX_RANGE),
+      comments: getCommentArray(getRandomInt(COMMENTS_MIN_RANGE, COMMENTS_MAX_RANGE))
+    };
+
+    array.push(photo);
+  }
+
+  return array;
+};
+
+var createPhoto = function (photo) {
+  var pictureTemplate = document.querySelector('#picture').content.querySelector('.picture');
+
+  var photoElement = pictureTemplate.cloneNode(true);
+  photoElement.querySelector('.picture__img').src = photo.url;
+  photoElement.querySelector('.picture__img').alt = photo.description;
+  photoElement.querySelector('.picture__comments').textContent = photo.comments.length;
+  photoElement.querySelector('.picture__likes').textContent = photo.likes;
+
+  return photoElement;
+};
+
+var renderPhotos = function () {
+  var photosContainer = document.querySelector('.pictures');
+  var fragment = document.createDocumentFragment();
+  var photosArray = getPhotosArray(PHOTOS_MAX_RANGE);
+
+  for (var i = 0; i < photosArray.length; i++) {
+    fragment.appendChild(createPhoto(photosArray[i]));
+  }
+
+  photosContainer.appendChild(fragment);
+};
+
+renderPhotos();
