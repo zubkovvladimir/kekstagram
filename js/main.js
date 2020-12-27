@@ -8,6 +8,22 @@ var COMMENTS_MAX_RANGE = 6;
 var LIKES_MIN_RANGE = 15;
 var LIKES_MAX_RANGE = 200;
 
+var COMMENT_AVATARR_WIDTH_HEIGHT = 35;
+
+var body = document.body;
+var photosContainer = document.querySelector('.pictures');
+var pictureTemplate = document.querySelector('#picture').content.querySelector('.picture');
+
+var bigPicture = document.querySelector('.big-picture');
+var bigPictureImg = bigPicture.querySelector('.big-picture__img').querySelector('img');
+var bigPictureSocial = bigPicture.querySelector('.big-picture__social');
+var bigPictureSocialLoader = bigPictureSocial.querySelector('.comments-loader');
+var bigPictureCommentsCount = bigPictureSocial.querySelector('.comments-count');
+var bigPictureSocialCaption = bigPictureSocial.querySelector('.social__caption');
+var bigPictureSocialLikes = bigPictureSocial.querySelector('.likes-count');
+var bigPictureSocialCommentsCount = bigPictureSocial.querySelector('.social__comment-count');
+var bigPictureSocialCommentsContainer = bigPictureSocial.querySelector('.social__comments');
+
 var MESSSGES = [
   'Всё отлично!',
   'В целом всё неплохо. Но не всё.',
@@ -59,7 +75,7 @@ var getCommentArray = function (number) {
     var comment = {
       avatar: 'img/avatar-' + getRandomInt(COMMENTS_MIN_RANGE, COMMENTS_MAX_RANGE) + '.svg',
       message: message,
-      name: NAMES[getRandomInt(0, NAMES.length)]
+      name: NAMES[getRandomInt(0, NAMES.length - 1)]
     };
 
     commentArray.push(comment);
@@ -87,10 +103,11 @@ var getPhotosArray = function (number) {
   return array;
 };
 
-var createPhoto = function (photo) {
-  var pictureTemplate = document.querySelector('#picture').content.querySelector('.picture');
+var photosArray = getPhotosArray(PHOTOS_MAX_RANGE);
 
+var createPhoto = function (photo) {
   var photoElement = pictureTemplate.cloneNode(true);
+
   photoElement.querySelector('.picture__img').src = photo.url;
   photoElement.querySelector('.picture__img').alt = photo.description;
   photoElement.querySelector('.picture__comments').textContent = photo.comments.length;
@@ -99,16 +116,62 @@ var createPhoto = function (photo) {
   return photoElement;
 };
 
-var renderPhotos = function () {
-  var photosContainer = document.querySelector('.pictures');
+var renderPhotos = function (photos) {
   var fragment = document.createDocumentFragment();
-  var photosArray = getPhotosArray(PHOTOS_MAX_RANGE);
 
-  for (var i = 0; i < photosArray.length; i++) {
-    fragment.appendChild(createPhoto(photosArray[i]));
+  for (var i = 0; i < photos.length; i++) {
+    fragment.appendChild(createPhoto(photos[i]));
   }
 
   photosContainer.appendChild(fragment);
 };
 
-renderPhotos();
+var displayFullPhoto = function (photo) {
+  bigPictureImg.src = photo[0].url;
+  bigPictureCommentsCount.textContent = photo[0].comments.length;
+  bigPictureSocialCaption.textContent = photo[0].description;
+  bigPictureSocialLikes.textContent = photo[0].likes;
+
+  bigPictureSocialCommentsContainer.textContent = '';
+  bigPictureSocialCommentsContainer.appendChild(renderComments(photo[0].comments));
+
+  bigPictureSocialCommentsCount.classList.add('hidden');
+  bigPictureSocialLoader.classList.add('hidden');
+  body.classList.add('modal-open');
+  bigPicture.classList.remove('hidden');
+};
+
+var createComment = function (comments) {
+  var listItem = document.createElement('li');
+  var image = document.createElement('img');
+  var paragraph = document.createElement('p');
+
+  listItem.classList.add('social__comment');
+  image.classList.add('social__picture');
+  paragraph.classList.add('social__text');
+
+  listItem.appendChild(image);
+  listItem.appendChild(paragraph);
+
+  image.src = comments.avatar;
+  image.alt = comments.name;
+  image.width = COMMENT_AVATARR_WIDTH_HEIGHT;
+  image.height = COMMENT_AVATARR_WIDTH_HEIGHT;
+  paragraph.textContent = comments.message;
+
+  return listItem;
+};
+
+var renderComments = function (comments) {
+  var fragment = document.createDocumentFragment();
+
+  for (var i = 0; i < comments.length; i++) {
+    fragment.appendChild(createComment(comments[i]));
+  }
+
+  return fragment;
+};
+
+renderPhotos(photosArray);
+
+displayFullPhoto(photosArray);
