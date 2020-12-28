@@ -14,6 +14,9 @@ var body = document.body;
 var photosContainer = document.querySelector('.pictures');
 var pictureTemplate = document.querySelector('#picture').content.querySelector('.picture');
 
+var form = photosContainer.querySelector('.img-upload__form');
+var formOverlay = form.querySelector('.img-upload__overlay');
+
 var bigPicture = document.querySelector('.big-picture');
 var bigPictureImg = bigPicture.querySelector('.big-picture__img').querySelector('img');
 var bigPictureSocial = bigPicture.querySelector('.big-picture__social');
@@ -172,6 +175,12 @@ var renderComments = function (comments) {
   return fragment;
 };
 
+var onUploadPhoto = function () {
+  formOverlay.classList.remove('hidden');
+};
+
+form.addEventListener('change', onUploadPhoto);
+
 renderPhotos(photosArray);
 
-displayFullPhoto(photosArray);
+
