@@ -1,5 +1,7 @@
 'use strict';
 
+var oldStyle;
+
 var PHOTOS_MAX_RANGE = 25;
 
 var COMMENTS_MIN_RANGE = 1;
@@ -10,12 +12,21 @@ var LIKES_MAX_RANGE = 200;
 
 var COMMENT_AVATARR_WIDTH_HEIGHT = 35;
 
+var ENTER_KEY = 'Enter';
+var ESCAPE_KEY = 'Escape';
+
 var body = document.body;
 var photosContainer = document.querySelector('.pictures');
 var pictureTemplate = document.querySelector('#picture').content.querySelector('.picture');
 
 var form = photosContainer.querySelector('.img-upload__form');
+var formUploadControl = form.querySelector('#upload-file');
 var formOverlay = form.querySelector('.img-upload__overlay');
+var formbuttonCloseOverlay = form.querySelector('#upload-cancel');
+var formUploadInput = form.querySelector('#upload-file');
+var formEffectsList = formOverlay.querySelector('.effects__list');
+var formImgSlider = formOverlay.querySelector('.img-upload__effect-level');
+var formImgPreview = formOverlay.querySelector('.img-upload__preview').querySelector('img');
 
 var bigPicture = document.querySelector('.big-picture');
 var bigPictureImg = bigPicture.querySelector('.big-picture__img').querySelector('img');
@@ -44,6 +55,15 @@ var NAMES = [
   'Алевтина',
   'Александра',
   'Алина',
+];
+
+var EFFECTS = [
+  'none',
+  'chrome',
+  'sepia',
+  'marvin',
+  'phobos',
+  'heat'
 ];
 
 var getRandomInt = function (min, max) {
@@ -177,9 +197,55 @@ var renderComments = function (comments) {
 
 var onUploadPhoto = function () {
   formOverlay.classList.remove('hidden');
+  formImgSlider.classList.add('hidden');
+  formImgPreview.classList.remove(oldStyle);
+
+  formbuttonCloseOverlay.addEventListener('click', onCloseButtonClick);
+  document.addEventListener('keydown', onButtonKeydown);
+  formEffectsList.addEventListener('click', onRadioButtonClick);
 };
 
-form.addEventListener('change', onUploadPhoto);
+var closeOverlay = function () {
+  formOverlay.classList.add('hidden');
+
+  formbuttonCloseOverlay.removeEventListener('click', onCloseButtonClick);
+  document.removeEventListener('keydown', onButtonKeydown);
+  formUploadInput.value = '';
+  formImgPreview.classList.remove(oldStyle);
+};
+
+var onCloseButtonClick = function () {
+  closeOverlay();
+};
+
+var onButtonKeydown = function (evt) {
+  if (evt.key === ESCAPE_KEY) {
+    closeOverlay();
+  }
+};
+
+var onRadioButtonClick = function (evt) {
+  for (var i = 0; i < EFFECTS.length; i++) {
+    var isLabel = (evt.target.className === 'effects__label'
+                  && evt.target.previousElementSibling.id === 'effect-' + EFFECTS[i]);
+    var isSpan = (evt.target.className === 'effects__preview  effects__preview--' + EFFECTS[i]);
+
+    if (isLabel || isSpan) {
+      if (EFFECTS[i] === 'none') {
+        formImgPreview.classList.remove(oldStyle);
+        formImgSlider.classList.add('hidden');
+        return;
+      }
+      formImgPreview.classList.remove(oldStyle);
+      formImgSlider.classList.remove('hidden');
+
+      formImgPreview.classList.add('effects__preview--' + EFFECTS[i]);
+      oldStyle = 'effects__preview--' + EFFECTS[i];
+    }
+  }
+};
+
+formUploadControl.addEventListener('change', onUploadPhoto);
 
 renderPhotos(photosArray);
 
