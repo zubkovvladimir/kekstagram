@@ -12,7 +12,6 @@ var LIKES_MAX_RANGE = 200;
 
 var COMMENT_AVATARR_WIDTH_HEIGHT = 35;
 
-var ENTER_KEY = 'Enter';
 var ESCAPE_KEY = 'Escape';
 
 var body = document.body;
@@ -25,6 +24,10 @@ var formOverlay = form.querySelector('.img-upload__overlay');
 var formbuttonCloseOverlay = form.querySelector('#upload-cancel');
 var formUploadInput = form.querySelector('#upload-file');
 var formEffectsList = formOverlay.querySelector('.effects__list');
+
+var formScaleSmaller = formOverlay.querySelector('.scale__control--smaller');
+var formScaleBigger = formOverlay.querySelector('.scale__control--bigger');
+
 var formImgSlider = formOverlay.querySelector('.img-upload__effect-level');
 var formImgSliderLine = formImgSlider.querySelector('.effect-level__line');
 var formImgSliderInput = formImgSlider.querySelector('.effect-level__value');
@@ -207,6 +210,8 @@ var onUploadPhoto = function () {
   document.addEventListener('keydown', onButtonKeydown);
   formEffectsList.addEventListener('click', onRadioButtonClick);
   formImgSliderPin.addEventListener('mouseup', onPinKeydown);
+  formScaleSmaller.addEventListener('click', onScaleClick);
+  formScaleBigger.addEventListener('click', onScaleClick);
 };
 
 var closeOverlay = function () {
@@ -218,6 +223,7 @@ var closeOverlay = function () {
   formUploadInput.value = '';
   formImgPreview.style.filter = '';
   formImgPreview.classList.remove(oldStyle);
+  formImgPreview.style.transform = '';
 };
 
 var onCloseButtonClick = function () {
@@ -265,29 +271,39 @@ var onPinKeydown = function () {
   switch (oldStyle) {
     case 'effects__preview--chrome':
       formImgPreview.style.filter = 'grayscale(' + proportion / 100 + ')';
-      formImgPreview.style.webkitFilter = 'grayscale(' + proportion / 100 + ')';
       break;
     case 'effects__preview--sepia':
       formImgPreview.style.filter = 'sepia(' + proportion / 100 + ')';
-      formImgPreview.style.webkitFilter = 'sepia(' + proportion / 100 + ')';
       break;
     case 'effects__preview--marvin':
       formImgPreview.style.filter = 'invert(' + proportion + '%)';
-      formImgPreview.style.webkitFilter = 'invert(' + proportion + '%)';
       break;
     case 'effects__preview--phobos':
       formImgPreview.style.filter = 'blur(' + proportion / 10 + 'px)';
-      formImgPreview.style.webkitFilter = 'blur(' + proportion / 10 + 'px)';
       break;
     case 'effects__preview--heat':
       formImgPreview.style.filter = 'brightness(' + proportion + '%)';
-      formImgPreview.style.webkitFilter = 'brightness(' + proportion + '%)';
       break;
   }
 };
 
-formUploadControl.addEventListener('change', onUploadPhoto);
+var onScaleClick = function (evt) {
+  var formScaleValue = formOverlay.querySelector('.scale__control--value');
+  var numberValue = parseInt(formScaleValue.value.replace('%', ''), 10);
+  var isSmaller = evt.target.className === 'scale__control  scale__control--smaller';
+  var isBigger = evt.target.className === 'scale__control  scale__control--bigger';
+
+  if (numberValue > 25 && isSmaller) {
+    formScaleValue.value = ((numberValue - 25) + '%');
+    formImgPreview.style.transform = 'scale(' + ((numberValue - 25) / 100) + ')';
+  } else if (numberValue < 100 && isBigger) {
+    formScaleValue.value = ((numberValue + 25) + '%');
+    formImgPreview.style.transform = 'scale(' + ((numberValue + 25) / 100) + ')';
+  }
+};
 
 renderPhotos(photosArray);
+
+formUploadControl.addEventListener('change', onUploadPhoto);
 
 
