@@ -15,7 +15,7 @@
     <!-- Фильтрация изображений от других пользователей -->
     <section class="img-filters  img-filters--inactive  container">
       <h2 class="img-filters__title  visually-hidden">Фильтр фотографий</h2>
-      <form class="img-filters__form" action="index.html" method="get" autocomplete="off">
+      <form class="img-filters__form" action="https://javascript.pages.academy/kekstagram/data" method="get" autocomplete="off">
         <button type=button class="img-filters__button  img-filters__button--active" id="filter-default">По умолчанию</button>
         <button type=button class="img-filters__button" id="filter-random">Случайные</button>
         <button type=button class="img-filters__button" id="filter-discussed">Обсуждаемые</button>
@@ -30,7 +30,7 @@
       <section class="img-upload">
         <div class="img-upload__wrapper">
           <h2 class="img-upload__title  visually-hidden">Загрузка фотографии</h2>
-          <form class="img-upload__form" id="upload-select-image" method="post" enctype="multipart/form-data" autocomplete="off">
+          <form class="img-upload__form" id="upload-select-image" action="https://javascript.pages.academy/kekstagram" method="post" enctype="multipart/form-data" autocomplete="off">
 
             <!-- Изначальное состояние поля для загрузки изображения -->
             <fieldset class="img-upload__start">
@@ -118,7 +118,16 @@
 
                 <!-- Добавление хэш-тегов и комментария к изображению -->
                 <fieldset class="img-upload__text text">
-                  <input class="text__hashtags" name="hashtags" placeholder="#хэш-тег">
+                  <input class="text__hashtags" name="hashtags" placeholder="#хэш-тег" max="5">
+                  <ul class="input-requirements">
+                    <li>хэш-тег должен начинаться с символа # (решётка)</li>
+                    <li>хеш-тег должен состоять только из букв и чисел и не может содержать пробелы</li>
+                    <li>хеш-тег не может состоять только из одной решётки</li>
+                    <li>максимальная длина одного хэш-тега 20 символов, включая решётку</li>
+                    <li>хэш-теги разделяются пробелами</li>
+                    <li>один и тот же хэш-тег не может быть использован дважды</li>
+                    <li>нельзя указать больше пяти хэш-тегов</li>
+                  </ul>
                   <textarea class="text__description" name="description" placeholder="Ваш комментарий..."></textarea>
                 </fieldset>
 

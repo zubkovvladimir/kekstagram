@@ -20,10 +20,12 @@ var pictureTemplate = document.querySelector('#picture').content.querySelector('
 
 var form = photosContainer.querySelector('.img-upload__form');
 var formUploadControl = form.querySelector('#upload-file');
+var formUploadHashtags = form.querySelector('.text__hashtags');
 var formOverlay = form.querySelector('.img-upload__overlay');
 var formbuttonCloseOverlay = form.querySelector('#upload-cancel');
 var formUploadInput = form.querySelector('#upload-file');
 var formEffectsList = formOverlay.querySelector('.effects__list');
+var formOverlaySubmit = formOverlay.querySelector('.img-upload__submit');
 
 var formScaleSmaller = formOverlay.querySelector('.scale__control--smaller');
 var formScaleBigger = formOverlay.querySelector('.scale__control--bigger');
@@ -301,6 +303,102 @@ var onScaleClick = function (evt) {
     formImgPreview.style.transform = 'scale(' + ((numberValue + 25) / 100) + ')';
   }
 };
+
+// var checkValidity = function (evt) {
+//   var arrayHashtags = evt.target.value.split(' ');
+
+//   console.log(arrayHashtags);
+
+//   arrayHashtags.forEach(function (element) {
+//     if (!element.startsWith('#')) {
+//       var item = form.querySelector('.input-requirements li:nth-child(1)');
+//       item.classList.add('invalid');
+//       item.classList.remove('valid');
+//     } else {
+//       var item1 = form.querySelector('.input-requirements li:nth-child(1)');
+//       item1.classList.remove('invalid');
+//       item1.classList.add('valid');
+//     }
+//   });
+// };
+
+// formUploadHashtags.addEventListener('input', checkValidity);
+
+var CustomValidation = function () {
+  this.invalidities = [];
+  this.validityChecks = [];
+};
+
+CustomValidation.prototype = {
+  addInvalidity: function (message) {
+    this.invalidities.push(message);
+  },
+  getInvalidities: function () {
+    return this.invalidities.join('. \n');
+  },
+  checkValidity: function (input) {
+    for (var i = 0; i < this.validityChecks.length; i++) {
+      var isInvalid = this.validityChecks[i].isInvalid(input);
+      // console.log(isInvalid);
+
+      if (isInvalid) {
+        this.addInvalidity(this.validityChecks[i].invalidityMessage);
+        this.validityChecks[i].element.classList.add('invalid');
+        this.validityChecks[i].element.classList.remove('valid');
+      } else {
+        this.validityChecks[i].element.classList.remove('invalid');
+        this.validityChecks[i].element.classList.add('valid');
+      }
+    }
+  }
+};
+
+var usernameValidityChecks = [
+  {
+    isInvalid: function (input) {
+      return !input.startsWith('#');
+    },
+    invalidityMessage: 'хэш-тег должен начинаться с символа # (решётка)',
+    element: form.querySelector('.input-requirements li:nth-child(1)')
+  },
+  {
+    isInvalid: function (input) {
+      // var s = input.slice(1);
+      console.log(input.match(/.[^a-zA-Z0-9]/g));
+      // console.log(input.slice(1));
+      // console.log(!!input.slice(1).match(/[a-zA-Z0-9]/g));
+      return input.match(/.[^a-zA-Z0-9]/g);
+    },
+    invalidityMessage: 'хеш-тег должен состоять только из букв и чисел и не может содержать пробелы',
+    element: form.querySelector('.input-requirements li:nth-child(2)')
+  }
+];
+
+var checkValidity = function (evt) {
+  formUploadHashtags.CustomValidation.invalidities = [];
+  var arrayHashtags = evt.target.value.split(' ');
+
+  for (var i = 0; i < arrayHashtags.length; i++) {
+    formUploadHashtags.CustomValidation.checkValidity(arrayHashtags[i]);
+  }
+
+  var isEmpty = formUploadHashtags.CustomValidation.invalidities.length === 0
+                                          && formUploadHashtags.value !== '';
+
+  if (isEmpty) {
+    formUploadHashtags.setCustomValidity('');
+  } else {
+    var message = formUploadHashtags.CustomValidation.getInvalidities();
+    formUploadHashtags.setCustomValidity(message);
+  }
+};
+
+formUploadHashtags.CustomValidation = new CustomValidation();
+formUploadHashtags.CustomValidation.validityChecks = usernameValidityChecks;
+
+formUploadHashtags.addEventListener('input', checkValidity);
+formOverlaySubmit.addEventListener('submit', checkValidity);
+
 
 renderPhotos(photosArray);
 
