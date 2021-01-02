@@ -211,9 +211,10 @@ var onUploadPhoto = function () {
   formbuttonCloseOverlay.addEventListener('click', onCloseButtonClick);
   document.addEventListener('keydown', onButtonKeydown);
   formEffectsList.addEventListener('click', onRadioButtonClick);
-  formImgSliderPin.addEventListener('mouseup', onPinKeydown);
+  formImgSliderPin.addEventListener('mouseup', onPinMouseup);
   formScaleSmaller.addEventListener('click', onScaleClick);
   formScaleBigger.addEventListener('click', onScaleClick);
+  body.classList.add('modal-open');
 };
 
 var closeOverlay = function () {
@@ -221,7 +222,7 @@ var closeOverlay = function () {
 
   formbuttonCloseOverlay.removeEventListener('click', onCloseButtonClick);
   document.removeEventListener('keydown', onButtonKeydown);
-  formImgSliderPin.removeEventListener('mouseup', onPinKeydown);
+  formImgSliderPin.removeEventListener('mouseup', onPinMouseup);
   formUploadInput.value = '';
   formImgPreview.style.filter = '';
   formImgPreview.classList.remove(oldStyle);
@@ -239,12 +240,13 @@ var onButtonKeydown = function (evt) {
 };
 
 var onRadioButtonClick = function (evt) {
-  for (var i = 0; i < EFFECTS.length; i++) {
-    var isLabel = (evt.target.className === 'effects__label'
-                  && evt.target.previousElementSibling.id === 'effect-' + EFFECTS[i]);
-    var isSpan = (evt.target.className === 'effects__preview  effects__preview--' + EFFECTS[i]);
+  var target = evt.target;
 
-    if (isLabel || isSpan) {
+  for (var i = 0; i < EFFECTS.length; i++) {
+    var input = formEffectsList.querySelector('#effect-' + EFFECTS[i]);
+    var isItem = target.contains(input);
+
+    if (isItem) {
       if (EFFECTS[i] === 'none') {
         formImgPreview.classList.remove(oldStyle);
         formImgPreview.style.filter = '';
@@ -261,11 +263,11 @@ var onRadioButtonClick = function (evt) {
   }
 };
 
-var onPinKeydown = function () {
+var onPinMouseup = function () {
   var pinPosition = getComputedStyle(formImgSliderPin).getPropertyValue('left');
-  var roundPinPosition = pinPosition.split('.')[0];
+  var roundPinPosition = parseInt(pinPosition.split('.')[0], 10);
   var lineWidth = getComputedStyle(formImgSliderLine).getPropertyValue('width');
-  var roundLineWidth = lineWidth.split('.')[0];
+  var roundLineWidth = parseInt(lineWidth.split('.')[0], 10);
   var proportion = Math.round(roundPinPosition / roundLineWidth * 100);
 
   formImgSliderInput.value = proportion;
@@ -290,10 +292,11 @@ var onPinKeydown = function () {
 };
 
 var onScaleClick = function (evt) {
+  var target = evt.target;
   var formScaleValue = formOverlay.querySelector('.scale__control--value');
   var numberValue = parseInt(formScaleValue.value.replace('%', ''), 10);
-  var isSmaller = evt.target.className === 'scale__control  scale__control--smaller';
-  var isBigger = evt.target.className === 'scale__control  scale__control--bigger';
+  var isSmaller = target.classList.contains('scale__control--smaller');
+  var isBigger = target.classList.contains('scale__control--bigger');
 
   if (numberValue > 25 && isSmaller) {
     formScaleValue.value = ((numberValue - 25) + '%');
@@ -304,29 +307,10 @@ var onScaleClick = function (evt) {
   }
 };
 
-// var checkValidity = function (evt) {
-//   var arrayHashtags = evt.target.value.split(' ');
-
-//   console.log(arrayHashtags);
-
-//   arrayHashtags.forEach(function (element) {
-//     if (!element.startsWith('#')) {
-//       var item = form.querySelector('.input-requirements li:nth-child(1)');
-//       item.classList.add('invalid');
-//       item.classList.remove('valid');
-//     } else {
-//       var item1 = form.querySelector('.input-requirements li:nth-child(1)');
-//       item1.classList.remove('invalid');
-//       item1.classList.add('valid');
-//     }
-//   });
-// };
-
-// formUploadHashtags.addEventListener('input', checkValidity);
-
 var CustomValidation = function () {
   this.invalidities = [];
   this.validityChecks = [];
+  this.uniqueArray = [];
 };
 
 CustomValidation.prototype = {
@@ -334,11 +318,13 @@ CustomValidation.prototype = {
     this.invalidities.push(message);
   },
   getInvalidities: function () {
-    return this.invalidities.join('. \n');
+    this.uniqueArray = [...new Set(this.invalidities)];
+
+    return this.uniqueArray.join('. \n');
   },
-  checkValidity: function (input) {
+  checkValidity: function (input, arrayHashtags) {
     for (var i = 0; i < this.validityChecks.length; i++) {
-      var isInvalid = this.validityChecks[i].isInvalid(input);
+      var isInvalid = this.validityChecks[i].isInvalid(input, arrayHashtags);
       // console.log(isInvalid);
 
       if (isInvalid) {
@@ -363,14 +349,46 @@ var usernameValidityChecks = [
   },
   {
     isInvalid: function (input) {
-      // var s = input.slice(1);
-      console.log(input.match(/.[^a-zA-Z0-9]/g));
-      // console.log(input.slice(1));
-      // console.log(!!input.slice(1).match(/[a-zA-Z0-9]/g));
       return input.match(/.[^a-zA-Z0-9]/g);
     },
     invalidityMessage: 'хеш-тег должен состоять только из букв и чисел и не может содержать пробелы',
     element: form.querySelector('.input-requirements li:nth-child(2)')
+  },
+  {
+    isInvalid: function (input) {
+      return !input.match(/[^#]/g);
+    },
+    invalidityMessage: 'хеш-тег не может состоять только из одной решётки',
+    element: form.querySelector('.input-requirements li:nth-child(3)')
+  },
+  {
+    isInvalid: function (input) {
+      return !(input.split('').length < 21);
+    },
+    invalidityMessage: 'максимальная длина одного хэш-тега 20 символов, включая решётку',
+    element: form.querySelector('.input-requirements li:nth-child(4)')
+  },
+  {
+    isInvalid: function (input) {
+      return input.match(/.#/g);
+    },
+    invalidityMessage: 'хэш-теги разделяются пробелами',
+    element: form.querySelector('.input-requirements li:nth-child(5)')
+  },
+  {
+    isInvalid: function (input, arrayHashtags) {
+      var arrayWithoutDuplicates = [...new Set(arrayHashtags)];
+      return !(arrayWithoutDuplicates.length === arrayHashtags.length);
+    },
+    invalidityMessage: 'один и тот же хэш-тег не может быть использован дважды',
+    element: form.querySelector('.input-requirements li:nth-child(6)')
+  },
+  {
+    isInvalid: function (input, arrayHashtags) {
+      return arrayHashtags.length > 5;
+    },
+    invalidityMessage: 'нельзя указать больше пяти хэш-тегов',
+    element: form.querySelector('.input-requirements li:nth-child(7)')
   }
 ];
 
@@ -379,7 +397,7 @@ var checkValidity = function (evt) {
   var arrayHashtags = evt.target.value.split(' ');
 
   for (var i = 0; i < arrayHashtags.length; i++) {
-    formUploadHashtags.CustomValidation.checkValidity(arrayHashtags[i]);
+    formUploadHashtags.CustomValidation.checkValidity(arrayHashtags[i], arrayHashtags);
   }
 
   var isEmpty = formUploadHashtags.CustomValidation.invalidities.length === 0
@@ -397,6 +415,9 @@ formUploadHashtags.CustomValidation = new CustomValidation();
 formUploadHashtags.CustomValidation.validityChecks = usernameValidityChecks;
 
 formUploadHashtags.addEventListener('input', checkValidity);
+formUploadHashtags.addEventListener('keydown', function (evt) {
+  evt.stopPropagation();
+});
 formOverlaySubmit.addEventListener('submit', checkValidity);
 
 
