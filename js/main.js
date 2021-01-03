@@ -13,6 +13,7 @@ var LIKES_MAX_RANGE = 200;
 var COMMENT_AVATARR_WIDTH_HEIGHT = 35;
 
 var ESCAPE_KEY = 'Escape';
+var ENTER_KEY = 'Enter';
 
 var body = document.body;
 var photosContainer = document.querySelector('.pictures');
@@ -26,6 +27,7 @@ var formbuttonCloseOverlay = form.querySelector('#upload-cancel');
 var formUploadInput = form.querySelector('#upload-file');
 var formEffectsList = formOverlay.querySelector('.effects__list');
 var formOverlaySubmit = formOverlay.querySelector('.img-upload__submit');
+var formOverlayTextarea = formOverlay.querySelector('.text__description');
 
 var formScaleSmaller = formOverlay.querySelector('.scale__control--smaller');
 var formScaleBigger = formOverlay.querySelector('.scale__control--bigger');
@@ -39,6 +41,7 @@ var formImgPreview = formOverlay.querySelector('.img-upload__preview').querySele
 var bigPicture = document.querySelector('.big-picture');
 var bigPictureImg = bigPicture.querySelector('.big-picture__img').querySelector('img');
 var bigPictureSocial = bigPicture.querySelector('.big-picture__social');
+var bigPictureCancel = bigPicture.querySelector('.big-picture__cancel');
 var bigPictureSocialLoader = bigPictureSocial.querySelector('.comments-loader');
 var bigPictureCommentsCount = bigPictureSocial.querySelector('.comments-count');
 var bigPictureSocialCaption = bigPictureSocial.querySelector('.social__caption');
@@ -99,10 +102,7 @@ var getCommentArray = function (number) {
   var commentArray = [];
 
   for (var i = 0; i <= number; i++) {
-    var message = getRandomInt(0, 1) ?
-      MESSSGES[getRandomInt(0, MESSSGES.length - 1)] :
-      MESSSGES[getRandomInt(0, MESSSGES.length - 1)] + ' ' + MESSSGES[getRandomInt(0, MESSSGES.length - 1)];
-
+    var message = MESSSGES[getRandomInt(0, MESSSGES.length - 1)];
     var comment = {
       avatar: 'img/avatar-' + getRandomInt(COMMENTS_MIN_RANGE, COMMENTS_MAX_RANGE) + '.svg',
       message: message,
@@ -122,6 +122,7 @@ var getPhotosArray = function (number) {
   for (var i = 0; i < number; i++) {
 
     var photo = {
+      id: arrayOfUniqueNumbers[i],
       url: 'photos/' + arrayOfUniqueNumbers[i] + '.jpg',
       description: 'Описание фото ' + getRandomInt(1, PHOTOS_MAX_RANGE),
       likes: getRandomInt(LIKES_MIN_RANGE, LIKES_MAX_RANGE),
@@ -139,6 +140,7 @@ var photosArray = getPhotosArray(PHOTOS_MAX_RANGE);
 var createPhoto = function (photo) {
   var photoElement = pictureTemplate.cloneNode(true);
 
+  photoElement.querySelector('.picture__img').dataset.id = photo.id;
   photoElement.querySelector('.picture__img').src = photo.url;
   photoElement.querySelector('.picture__img').alt = photo.description;
   photoElement.querySelector('.picture__comments').textContent = photo.comments.length;
@@ -158,18 +160,39 @@ var renderPhotos = function (photos) {
 };
 
 var displayFullPhoto = function (photo) {
-  bigPictureImg.src = photo[0].url;
-  bigPictureCommentsCount.textContent = photo[0].comments.length;
-  bigPictureSocialCaption.textContent = photo[0].description;
-  bigPictureSocialLikes.textContent = photo[0].likes;
+  bigPictureImg.src = photo.url;
+  bigPictureCommentsCount.textContent = photo.comments.length;
+  bigPictureSocialCaption.textContent = photo.description;
+  bigPictureSocialLikes.textContent = photo.likes;
 
   bigPictureSocialCommentsContainer.textContent = '';
-  bigPictureSocialCommentsContainer.appendChild(renderComments(photo[0].comments));
+  bigPictureSocialCommentsContainer.appendChild(renderComments(photo.comments));
 
   bigPictureSocialCommentsCount.classList.add('hidden');
   bigPictureSocialLoader.classList.add('hidden');
   body.classList.add('modal-open');
   bigPicture.classList.remove('hidden');
+
+  bigPictureCancel.addEventListener('click', onClosePhotoClick);
+  document.addEventListener('keydown', onPhotoKeydown);
+};
+
+var closePhoto = function () {
+  body.classList.remove('modal-open');
+  bigPicture.classList.add('hidden');
+
+  bigPictureCancel.removeEventListener('click', onCloseButtonClick);
+  document.removeEventListener('keydown', onPhotoKeydown);
+};
+
+var onClosePhotoClick = function () {
+  closePhoto();
+};
+
+var onPhotoKeydown = function (evt) {
+  if (evt.key === ESCAPE_KEY) {
+    closePhoto();
+  }
 };
 
 var createComment = function (comments) {
@@ -227,6 +250,7 @@ var closeOverlay = function () {
   formImgPreview.style.filter = '';
   formImgPreview.classList.remove(oldStyle);
   formImgPreview.style.transform = '';
+  body.classList.remove('modal-open');
 };
 
 var onCloseButtonClick = function () {
@@ -325,7 +349,6 @@ CustomValidation.prototype = {
   checkValidity: function (input, arrayHashtags) {
     for (var i = 0; i < this.validityChecks.length; i++) {
       var isInvalid = this.validityChecks[i].isInvalid(input, arrayHashtags);
-      // console.log(isInvalid);
 
       if (isInvalid) {
         this.addInvalidity(this.validityChecks[i].invalidityMessage);
@@ -411,18 +434,49 @@ var checkValidity = function (evt) {
   }
 };
 
-formUploadHashtags.CustomValidation = new CustomValidation();
-formUploadHashtags.CustomValidation.validityChecks = usernameValidityChecks;
+var stopPropagation = function (element) {
+  element.addEventListener('keydown', function (evt) {
+    evt.stopPropagation();
+  });
+};
 
-formUploadHashtags.addEventListener('input', checkValidity);
-formUploadHashtags.addEventListener('keydown', function (evt) {
-  evt.stopPropagation();
-});
-formOverlaySubmit.addEventListener('submit', checkValidity);
-
+stopPropagation(formUploadHashtags);
+stopPropagation(formOverlayTextarea);
 
 renderPhotos(photosArray);
 
 formUploadControl.addEventListener('change', onUploadPhoto);
 
+formUploadHashtags.CustomValidation = new CustomValidation();
+formUploadHashtags.CustomValidation.validityChecks = usernameValidityChecks;
 
+formUploadHashtags.addEventListener('input', checkValidity);
+formOverlaySubmit.addEventListener('submit', checkValidity);
+
+var showFullPhoto = function (evt) {
+  var photoId;
+  var link = evt.target.classList.contains('picture');
+
+  link ? photoId = evt.target.firstElementChild.dataset.id : photoId = evt.target.dataset.id;
+
+  if(photoId !== undefined) {
+    var photo = photosArray.find(function (elem) {
+      return elem.id === parseInt(photoId, 10);
+    } );
+
+    displayFullPhoto(photo);
+  }
+};
+
+var onPhotoClick = function (evt) {
+  showFullPhoto(evt);
+};
+
+var onPhotoEnterKeydown = function (evt) {
+  if (evt.key === ENTER_KEY) {
+    showFullPhoto(evt);
+  }
+};
+
+photosContainer.addEventListener('click', onPhotoClick);
+photosContainer.addEventListener('keydown', onPhotoEnterKeydown);
