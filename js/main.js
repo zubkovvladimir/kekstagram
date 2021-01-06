@@ -88,29 +88,6 @@ var EFFECTS = [
   'phobos',
   'heat'
 ];
-// test
-// Поиск случайного числа в промежутке от min до max и поучение массива случайных чисел
-
-var getRandomInt = function (min, max) {
-  min = Math.ceil(min);
-  max = Math.floor(max);
-  return Math.floor(Math.random() * (max - min + 1)) + min;
-};
-
-var getArrayOfUniqueNumbers = function (number) {
-  var array = [];
-  var randomNumber;
-
-  while (array.length < number) {
-    randomNumber = getRandomInt(1, number);
-
-    if (array.indexOf(randomNumber) === -1) {
-      array.push(randomNumber);
-    }
-  }
-
-  return array;
-};
 
 // Создание массива объектов с пользовательскими комментариями
 
@@ -118,11 +95,11 @@ var getCommentsData = function (number) {
   var commentArray = [];
 
   for (var i = 0; i <= number; i++) {
-    var message = MESSSGES[getRandomInt(0, MESSSGES.length - 1)];
+    var message = MESSSGES[window.util.getRandomInt(0, MESSSGES.length - 1)];
     var comment = {
-      avatar: 'img/avatar-' + getRandomInt(COMMENTS_MIN_RANGE, COMMENTS_MAX_RANGE) + '.svg',
+      avatar: 'img/avatar-' + window.util.getRandomInt(COMMENTS_MIN_RANGE, COMMENTS_MAX_RANGE) + '.svg',
       message: message,
-      name: NAMES[getRandomInt(0, NAMES.length - 1)]
+      name: NAMES[window.util.getRandomInt(0, NAMES.length - 1)]
     };
 
     commentArray.push(comment);
@@ -165,7 +142,7 @@ var renderComments = function (comments) {
 // Создание и отрисовка массива с объектами фотографий
 
 var getPhotosData = function (number) {
-  var arrayOfUniqueNumbers = getArrayOfUniqueNumbers(number);
+  var arrayOfUniqueNumbers = window.util.getArrayOfUniqueNumbers(number);
   var array = [];
 
   for (var i = 0; i < number; i++) {
@@ -173,9 +150,9 @@ var getPhotosData = function (number) {
     var photo = {
       id: arrayOfUniqueNumbers[i],
       url: 'photos/' + arrayOfUniqueNumbers[i] + '.jpg',
-      description: 'Описание фото ' + getRandomInt(1, PHOTOS_MAX_RANGE),
-      likes: getRandomInt(LIKES_MIN_RANGE, LIKES_MAX_RANGE),
-      comments: getCommentsData(getRandomInt(COMMENTS_MIN_RANGE, COMMENTS_MAX_RANGE))
+      description: 'Описание фото ' + window.util.getRandomInt(1, PHOTOS_MAX_RANGE),
+      likes: window.util.getRandomInt(LIKES_MIN_RANGE, LIKES_MAX_RANGE),
+      comments: getCommentsData(window.util.getRandomInt(COMMENTS_MIN_RANGE, COMMENTS_MAX_RANGE))
     };
 
     array.push(photo);
