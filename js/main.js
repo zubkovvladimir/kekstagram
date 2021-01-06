@@ -88,7 +88,7 @@ var EFFECTS = [
   'phobos',
   'heat'
 ];
-
+// test
 // Поиск случайного числа в промежутке от min до max и поучение массива случайных чисел
 
 var getRandomInt = function (min, max) {
