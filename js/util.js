@@ -1,6 +1,9 @@
 'use strict';
 
 (function () {
+  var ESC_KEYCODE = 27;
+  var ENTER_KEYCODE = 13;
+
   var getRandomInt = function (min, max) {
     min = Math.ceil(min);
     max = Math.floor(max);
@@ -22,8 +25,22 @@
     return array;
   };
 
+  var isEnterEvent = function (evt, action, picturesArray) {
+    if (evt.keyCode === ENTER_KEYCODE) {
+      action(evt, picturesArray);
+    }
+  };
+
+  var isEscEvent = function (evt, action) {
+    if (evt.keyCode === ESC_KEYCODE) {
+      action();
+    }
+  };
+
   window.util = {
     getRandomInt: getRandomInt,
-    getArrayOfUniqueNumbers: getArrayOfUniqueNumbers
+    getArrayOfUniqueNumbers: getArrayOfUniqueNumbers,
+    isEnterEvent: isEnterEvent,
+    isEscEvent: isEscEvent
   };
 })();
