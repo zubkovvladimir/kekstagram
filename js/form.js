@@ -27,10 +27,7 @@
   var imgPreview = overlay.querySelector('.img-upload__preview').querySelector('img');
   var effectsList = overlay.querySelector('.effects__list');
 
-  var onUploadButtonChange = function () {
-    overlay.classList.remove('hidden');
-    slider.classList.add('hidden');
-
+  var addListeners = function () {
     buttonClose.addEventListener('click', onCloseButtonClick);
     document.addEventListener('keydown', onButtonKeydown);
 
@@ -42,14 +39,9 @@
 
     hashtagsInput.addEventListener('input', window.validation.check);
     submit.addEventListener('submit', window.validation.check);
-
-    body.classList.add('modal-open');
   };
 
-  var closeOverlay = function () {
-    overlay.classList.add('hidden');
-    body.classList.remove('modal-open');
-
+  var removeListeners = function () {
     buttonClose.removeEventListener('click', onCloseButtonClick);
     document.removeEventListener('keydown', onButtonKeydown);
 
@@ -61,17 +53,32 @@
 
     hashtagsInput.removeEventListener('input', window.validation.check);
     submit.removeEventListener('submit', window.validation.check);
+  };
 
+  var onUploadButtonChange = function () {
+    overlay.classList.remove('hidden');
+    slider.classList.add('hidden');
+    body.classList.add('modal-open');
+
+    addListeners();
+  };
+
+  var closeOverlay = function () {
+    overlay.classList.add('hidden');
+    body.classList.remove('modal-open');
+
+    removeListeners();
+
+    imgPreview.style.transform = '';
     imgPreview.style.filter = '';
     window.effect.removeClass(imgPreview);
-    imgPreview.style.transform = '';
-    form.reset();
   };
 
   var onScaleClick = function (evt) {
     var target = evt.target;
     var formScaleValue = overlay.querySelector('.scale__control--value');
     var numberValue = parseInt(formScaleValue.value.replace('%', ''), 10);
+
     var isSmaller = target.classList.contains('scale__control--smaller');
     var isBigger = target.classList.contains('scale__control--bigger');
 

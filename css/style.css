@@ -609,7 +609,7 @@ main {
       -ms-transform: translateX(-50%);
           transform: translateX(-50%);
 
-  cursor: move;
+  cursor: pointer;
 }
 
 .effect-level__depth {

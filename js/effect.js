@@ -5,75 +5,75 @@
 
   var currentClass;
 
-  var formOverlay = document.querySelector('.img-upload__overlay');
-  var formImgSlider = formOverlay.querySelector('.img-upload__effect-level');
-  var formImgSliderPin = formImgSlider.querySelector('.effect-level__pin');
-  var formEffectsList = formOverlay.querySelector('.effects__list');
-  var formImgPreview = formOverlay.querySelector('.img-upload__preview').querySelector('img');
-  var formImgSliderLine = formOverlay.querySelector('.effect-level__line');
-  var formImgSliderInput = formOverlay.querySelector('.effect-level__value');
+  var overlay = document.querySelector('.img-upload__overlay');
+  var levelLine = overlay.querySelector('.effect-level__line');
+  var sliderPin = levelLine.querySelector('.effect-level__pin');
+  var sliderImg = overlay.querySelector('.img-upload__effect-level');
+  var effectsList = overlay.querySelector('.effects__list');
+  var imgPreview = overlay.querySelector('.img-upload__preview').querySelector('img');
+  var sliderInput = overlay.querySelector('.effect-level__value');
 
   var onRadioButtonClick = function (evt) {
     var target = evt.target;
 
     for (var i = 0; i < window.constant.EFFECTS.length; i++) {
-      var input = formEffectsList.querySelector('#effect-' + window.constant.EFFECTS[i]);
+      var input = effectsList.querySelector('#effect-' + window.constant.EFFECTS[i]);
       var isItem = target.contains(input);
 
       if (isItem) {
         if (window.constant.EFFECTS[i] === 'none') {
-          formImgPreview.classList.remove(currentClass);
-          formImgPreview.style.filter = '';
-          formImgSlider.classList.add('hidden');
+          imgPreview.classList.remove(currentClass);
+          imgPreview.style.filter = '';
+          sliderImg.classList.add('hidden');
           return;
         }
-        formImgPreview.style.filter = '';
-        formImgPreview.classList.remove(currentClass);
-        formImgSlider.classList.remove('hidden');
+        imgPreview.style.filter = '';
+        imgPreview.classList.remove(currentClass);
+        sliderImg.classList.remove('hidden');
 
-        formImgPreview.classList.add('effects__preview--' + window.constant.EFFECTS[i]);
+        imgPreview.classList.add('effects__preview--' + window.constant.EFFECTS[i]);
         currentClass = 'effects__preview--' + window.constant.EFFECTS[i];
       }
     }
   };
 
   var onPinMouseup = function () {
-    var pinPosition = getComputedStyle(formImgSliderPin).getPropertyValue('left');
+    var pinPosition = getComputedStyle(sliderPin).getPropertyValue('left');
     var roundPinPosition = parseInt(pinPosition.split('.')[0], 10);
 
-    var lineWidth = getComputedStyle(formImgSliderLine).getPropertyValue('width');
+    var lineWidth = getComputedStyle(levelLine).getPropertyValue('width');
     var roundLineWidth = parseInt(lineWidth.split('.')[0], 10);
 
     var proportion = Math.round(roundPinPosition / roundLineWidth * 100);
 
-    formImgSliderInput.value = proportion;
+    sliderInput.value = proportion;
 
     switch (currentClass) {
       case 'effects__preview--chrome':
-        formImgPreview.style.filter = 'grayscale(' + proportion / 100 + ')';
+        imgPreview.style.filter = 'grayscale(' + proportion / 100 + ')';
         break;
       case 'effects__preview--sepia':
-        formImgPreview.style.filter = 'sepia(' + proportion / 100 + ')';
+        imgPreview.style.filter = 'sepia(' + proportion / 100 + ')';
         break;
       case 'effects__preview--marvin':
-        formImgPreview.style.filter = 'invert(' + proportion + '%)';
+        imgPreview.style.filter = 'invert(' + proportion + '%)';
         break;
       case 'effects__preview--phobos':
-        formImgPreview.style.filter = 'blur(' + proportion / DECIMAL + 'px)';
+        imgPreview.style.filter = 'blur(' + proportion / DECIMAL + 'px)';
         break;
       case 'effects__preview--heat':
-        formImgPreview.style.filter = 'brightness(' + proportion + '%)';
+        imgPreview.style.filter = 'brightness(' + proportion + '%)';
         break;
     }
   };
 
-  var removeClass = function (imgPreview) {
+  var removeClass = function (preview) {
     for (var i = 0; i < window.constant.EFFECTS.length; i++) {
       var current = 'effects__preview--' + window.constant.EFFECTS[i];
-      var isCurrent = imgPreview.classList.contains(current);
+      var isCurrent = preview.classList.contains(current);
 
       if (isCurrent) {
-        imgPreview.classList.remove(current);
+        preview.classList.remove(current);
       }
     }
   };
