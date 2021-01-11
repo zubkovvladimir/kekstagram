@@ -32,7 +32,7 @@
     document.addEventListener('keydown', onButtonKeydown);
 
     effectsList.addEventListener('click', window.effect.onRadioButtonClick);
-    sliderPin.addEventListener('mouseup', window.effect.onPinMouseup);
+    sliderPin.addEventListener('mousedown', window.slider.onPinMousedown);
 
     scaleSmaller.addEventListener('click', onScaleClick);
     scaleBigger.addEventListener('click', onScaleClick);
@@ -46,7 +46,7 @@
     document.removeEventListener('keydown', onButtonKeydown);
 
     effectsList.removeEventListener('click', window.effect.onRadioButtonClick);
-    sliderPin.removeEventListener('mouseup', window.effect.onPinMouseup);
+    sliderPin.addEventListener('mousedown', window.slider.onPinMousedown);
 
     scaleSmaller.removeEventListener('click', onScaleClick);
     scaleBigger.removeEventListener('click', onScaleClick);
@@ -70,8 +70,7 @@
     removeListeners();
 
     imgPreview.style.transform = '';
-    imgPreview.style.filter = '';
-    window.effect.removeClass(imgPreview);
+    window.effect.removeFilter(imgPreview);
   };
 
   var onScaleClick = function (evt) {
