@@ -108,6 +108,16 @@
     }
   };
 
+  var onButtonSubmit = function (evt) {
+    window.backend.upload(new FormData(form), function (response) {
+      overlay.classList.add('hidden');
+      console.log('sdfsd');
+    });
+    evt.preventDefault();
+  };
+
+  form.addEventListener('submit', onButtonSubmit);
+
   window.edit = {
     onUploadButtonChange: onUploadButtonChange
   };

@@ -8,7 +8,7 @@
   var HASHTAG_MAX_COUNT = 5;
 
   var picturesContainer = document.querySelector('.pictures');
-  var form = picturesContainer.querySelector('.img-upload__form');  
+  var form = picturesContainer.querySelector('.img-upload__form');
   var formUploadHashtags = form.querySelector('.text__hashtags');
 
     var CustomValidation = function () {
@@ -16,20 +16,20 @@
       this.validityChecks = [];
       this.uniqueArray = [];
     };
-    
+
     CustomValidation.prototype = {
       addInvalidity: function (message) {
         this.invalidities.push(message);
       },
       getInvalidities: function () {
         this.uniqueArray = [...new Set(this.invalidities)];
-    
+
         return this.uniqueArray.join('. \n');
       },
       checkValidity: function (input, arrayHashtags) {
         for (var i = 0; i < this.validityChecks.length; i++) {
           var isInvalid = this.validityChecks[i].isInvalid(input, arrayHashtags);
-    
+
           if (isInvalid) {
             this.addInvalidity(this.validityChecks[i].invalidityMessage);
             this.validityChecks[i].element.classList.add('invalid');
@@ -41,7 +41,7 @@
         }
       }
     };
-    
+
     var usernameValidityChecks = [
       {
         isInvalid: function (input) {
@@ -94,26 +94,28 @@
         element: form.querySelector('.input-requirements li:nth-child(7)')
       }
     ];
-    
+
     var checkValidity = function (evt) {
       formUploadHashtags.CustomValidation.invalidities = [];
       var arrayHashtags = evt.target.value.split(' ');
-    
+
       for (var i = 0; i < arrayHashtags.length; i++) {
         formUploadHashtags.CustomValidation.checkValidity(arrayHashtags[i], arrayHashtags);
       }
-    
+
       var isEmpty = formUploadHashtags.CustomValidation.invalidities.length === 0
                                               && formUploadHashtags.value !== '';
-    
+
       if (isEmpty) {
+        formUploadHashtags.setCustomValidity('');
+      } else if (arrayHashtags.length === 1 && arrayHashtags[0] === ''){
         formUploadHashtags.setCustomValidity('');
       } else {
         var message = formUploadHashtags.CustomValidation.getInvalidities();
         formUploadHashtags.setCustomValidity(message);
       }
     };
-    
+
     formUploadHashtags.CustomValidation = new CustomValidation();
     formUploadHashtags.CustomValidation.validityChecks = usernameValidityChecks;
 
