@@ -6,14 +6,15 @@
   var picturesContainer = document.querySelector('.pictures');
   var bigPicture = document.querySelector('.big-picture');
   var img = bigPicture.querySelector('.big-picture__img').querySelector('img');
-  var social = bigPicture.querySelector('.big-picture__social');
   var cancel = bigPicture.querySelector('.big-picture__cancel');
-  var socialLoader = social.querySelector('.comments-loader');
-  var commentsCount = social.querySelector('.comments-count');
+
+  var social = bigPicture.querySelector('.big-picture__social');
   var socialCaption = social.querySelector('.social__caption');
+  var commentsLoader = social.querySelector('.comments-loader');
+  var commentsCountElement = social.querySelector('.social__comment-count');
+  var commentsCount = social.querySelector('.comments-count');
   var likes = social.querySelector('.likes-count');
-  var socialCommentsCount = social.querySelector('.social__comment-count');
-  var socialCommentsContainer = social.querySelector('.social__comments');
+  var commentsContainer = social.querySelector('.social__comments');
 
   var createFullPicture = function (picture) {
     img.src = picture.url;
@@ -21,8 +22,8 @@
     socialCaption.textContent = picture.description;
     likes.textContent = picture.likes;
 
-    socialCommentsContainer.textContent = '';
-    socialCommentsContainer.appendChild(window.comment.render(picture.comments));
+    commentsContainer.textContent = '';
+    commentsContainer.appendChild(window.comment.render(picture.comments));
   };
 
   var showFullPicture = function (evt, picturesArray) {
@@ -38,8 +39,8 @@
 
       createFullPicture(picture);
 
-      socialCommentsCount.classList.add('hidden');
-      socialLoader.classList.add('hidden');
+      commentsCountElement.classList.add('hidden');
+      commentsLoader.classList.add('hidden');
       body.classList.add('modal-open');
       bigPicture.classList.remove('hidden');
 

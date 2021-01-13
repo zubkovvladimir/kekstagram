@@ -3,15 +3,27 @@
 (function () {
   var URL = 'https://javascript.pages.academy/kekstagram';
 
-  var upload = function (data, onSucces) {
+  var upload = function (data, onSucces, onError) {
     var xhr = new XMLHttpRequest();
     xhr.responseType = 'json';
 
     var onLoad = function () {
-      onSucces(xhr.response);
+      switch (xhr.status) {
+        case 200:
+          onSucces(xhr.response);
+          break;
+      }
     };
 
     xhr.addEventListener('load', onLoad);
+    // xhr.addEventListener('error', function () {
+    //   onError('Произошла ошибка соединения');
+    // });
+    // xhr.addEventListener('timeout', function () {
+    //   onError('Запрос не успел выполниться за ' + xhr.timeout + 'мс');
+    // });
+
+    xhr.timeout = 1000;
 
     xhr.open('POST', URL);
     xhr.send(data);

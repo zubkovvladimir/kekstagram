@@ -1,17 +1,17 @@
 'use strict';
 
 (function () {
-  var PICTURES_MAX_RANGE = 25;
-
-  var form = document.querySelector('.img-upload__form');
-  var formUploadControl = form.querySelector('#upload-file');
-  var picturesArray = window.data.getPictures(PICTURES_MAX_RANGE);
+  var formUploadControl = document.querySelector('#upload-file');
 
   formUploadControl.addEventListener('change', window.edit.onUploadButtonChange);
 
-  window.picture.render(picturesArray);
+  var renderPictures = function (data) {
+    window.util.addID(data);
+    window.picture.render(data);
+    window.preview.addtListenersPicture(data);
+  };
 
-  window.preview.addtListenersPicture(picturesArray);
+  window.backend.load(renderPictures);
 })();
 
 

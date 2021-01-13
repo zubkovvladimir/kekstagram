@@ -37,10 +37,17 @@
     }
   };
 
+  var addID = function (array) {
+    for (var i = 0; i < array.length; i++) {
+      array[i].id = i;
+    }
+  };
+
   window.util = {
     getRandomInt: getRandomInt,
     getArrayOfUniqueNumbers: getArrayOfUniqueNumbers,
     isEnterEvent: isEnterEvent,
-    isEscEvent: isEscEvent
+    isEscEvent: isEscEvent,
+    addID: addID
   };
 })();

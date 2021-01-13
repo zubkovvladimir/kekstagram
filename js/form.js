@@ -8,6 +8,8 @@
   var ESC_KEYCODE = 27;
 
   var body = document.body;
+  var main = document.querySelector('main');
+  var errorMessage = document.querySelector('#success').content.querySelector('.success');
 
   var form = document.querySelector('.img-upload__form');
   var overlay = form.querySelector('.img-upload__overlay');
@@ -21,9 +23,7 @@
   var hashtagsInput = form.querySelector('.text__hashtags');
   var textarea = overlay.querySelector('.text__description');
 
-  var submit = form.querySelector('.img-upload__submit');
   var buttonClose = form.querySelector('#upload-cancel');
-
   var imgPreview = overlay.querySelector('.img-upload__preview').querySelector('img');
   var effectsList = overlay.querySelector('.effects__list');
 
@@ -38,7 +38,7 @@
     scaleBigger.addEventListener('click', onScaleClick);
 
     hashtagsInput.addEventListener('input', window.validation.check);
-    submit.addEventListener('submit', window.validation.check);
+    form.addEventListener('submit', onButtonSubmit);
   };
 
   var removeListeners = function () {
@@ -52,7 +52,7 @@
     scaleBigger.removeEventListener('click', onScaleClick);
 
     hashtagsInput.removeEventListener('input', window.validation.check);
-    submit.removeEventListener('submit', window.validation.check);
+    form.removeEventListener('submit', onButtonSubmit);
   };
 
   var onUploadButtonChange = function () {
@@ -61,16 +61,6 @@
     body.classList.add('modal-open');
 
     addListeners();
-  };
-
-  var closeOverlay = function () {
-    overlay.classList.add('hidden');
-    body.classList.remove('modal-open');
-
-    removeListeners();
-
-    imgPreview.style.transform = '';
-    window.effect.removeFilter(imgPreview);
   };
 
   var onScaleClick = function (evt) {
@@ -94,6 +84,17 @@
     }
   };
 
+  var closeOverlay = function () {
+    overlay.classList.add('hidden');
+    body.classList.remove('modal-open');
+
+    removeListeners();
+
+    imgPreview.style.transform = '';
+    window.effect.removeFilter(imgPreview);
+    form.reset();
+  };
+
   var onCloseButtonClick = function () {
     closeOverlay();
   };
@@ -109,14 +110,38 @@
   };
 
   var onButtonSubmit = function (evt) {
-    window.backend.upload(new FormData(form), function (response) {
-      overlay.classList.add('hidden');
-      console.log('sdfsd');
+    window.backend.upload(new FormData(form), function () {
+      closeOverlay();
+      renderSuccessMessage();
     });
     evt.preventDefault();
   };
 
-  form.addEventListener('submit', onButtonSubmit);
+  var renderSuccessMessage = function () {
+    var errorElement = errorMessage.cloneNode(true);
+    main.appendChild(errorElement);
+
+    var successButton = document.querySelector('.success__button');
+    successButton.addEventListener('click', onSuccesButtonClick);
+    document.addEventListener('keydown', onSuccesButtonKeydown);
+  };
+
+  var closeMessage = function () {
+    var successButton = document.querySelector('.success__button');
+    successButton.removeEventListener('click', onButtonSubmit);
+    document.removeEventListener('keydown', onSuccesButtonKeydown);
+
+    var succesMessage = main.querySelector('.success');
+    main.removeChild(succesMessage);
+  };
+
+  var onSuccesButtonClick = function () {
+    closeMessage();
+  };
+
+  var onSuccesButtonKeydown = function (evt) {
+    window.util.isEscEvent(evt, closeMessage);
+  };
 
   window.edit = {
     onUploadButtonChange: onUploadButtonChange

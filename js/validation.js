@@ -97,6 +97,7 @@
 
     var checkValidity = function (evt) {
       formUploadHashtags.CustomValidation.invalidities = [];
+      console.log(evt.target.value);
       var arrayHashtags = evt.target.value.split(' ');
 
       for (var i = 0; i < arrayHashtags.length; i++) {
