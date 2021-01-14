@@ -8,8 +8,6 @@
   var ESC_KEYCODE = 27;
 
   var body = document.body;
-  var main = document.querySelector('main');
-  var errorMessage = document.querySelector('#success').content.querySelector('.success');
 
   var form = document.querySelector('.img-upload__form');
   var overlay = form.querySelector('.img-upload__overlay');
@@ -112,35 +110,9 @@
   var onButtonSubmit = function (evt) {
     window.backend.upload(new FormData(form), function () {
       closeOverlay();
-      renderSuccessMessage();
-    });
+      window.message.renderSuccess();
+    }, window.message.renderError);
     evt.preventDefault();
-  };
-
-  var renderSuccessMessage = function () {
-    var errorElement = errorMessage.cloneNode(true);
-    main.appendChild(errorElement);
-
-    var successButton = document.querySelector('.success__button');
-    successButton.addEventListener('click', onSuccesButtonClick);
-    document.addEventListener('keydown', onSuccesButtonKeydown);
-  };
-
-  var closeMessage = function () {
-    var successButton = document.querySelector('.success__button');
-    successButton.removeEventListener('click', onButtonSubmit);
-    document.removeEventListener('keydown', onSuccesButtonKeydown);
-
-    var succesMessage = main.querySelector('.success');
-    main.removeChild(succesMessage);
-  };
-
-  var onSuccesButtonClick = function () {
-    closeMessage();
-  };
-
-  var onSuccesButtonKeydown = function (evt) {
-    window.util.isEscEvent(evt, closeMessage);
   };
 
   window.edit = {
