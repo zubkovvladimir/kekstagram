@@ -7,6 +7,8 @@
   var successMessage = document.querySelector('#success').content.querySelector('.success');
   var errorMessage = document.querySelector('#error').content.querySelector('.error');
 
+  var isEscEvent = window.util.isEscEvent;
+
   var renderSuccessMessage = function () {
     var successElement = successMessage.cloneNode(true);
     main.appendChild(successElement);
@@ -51,7 +53,7 @@
   };
 
   var onButtonKeydown = function (evt) {
-    window.util.isEscEvent(evt, closeMessage);
+    isEscEvent(evt, closeMessage);
   };
 
   window.message = {

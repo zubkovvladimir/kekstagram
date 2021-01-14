@@ -9,8 +9,13 @@
   var COMMENTS_MIN_RANGE = 1;
   var COMMENTS_MAX_RANGE = 6;
 
+  var getArrayOfUniqueNumbers = window.util.getArrayOfUniqueNumbers;
+  var getRandomInt = window.util.getRandomInt;
+  var MESSSGES = window.constant.MESSSGES;
+  var NAMES = window.constant.NAMES;
+
   var getPicturesData = function (number) {
-    var arrayOfUniqueNumbers = window.util.getArrayOfUniqueNumbers(number);
+    var arrayOfUniqueNumbers = getArrayOfUniqueNumbers(number);
     var array = [];
 
     for (var i = 0; i < number; i++) {
@@ -18,9 +23,9 @@
       var picture = {
         id: arrayOfUniqueNumbers[i],
         url: 'photos/' + arrayOfUniqueNumbers[i] + '.jpg',
-        description: 'Описание фото ' + window.util.getRandomInt(1, PICTURES_MAX_RANGE),
-        likes: window.util.getRandomInt(LIKES_MIN_RANGE, LIKES_MAX_RANGE),
-        comments: getCommentsData(window.util.getRandomInt(COMMENTS_MIN_RANGE, COMMENTS_MAX_RANGE))
+        description: 'Описание фото ' + getRandomInt(1, PICTURES_MAX_RANGE),
+        likes: getRandomInt(LIKES_MIN_RANGE, LIKES_MAX_RANGE),
+        comments: getCommentsData(getRandomInt(COMMENTS_MIN_RANGE, COMMENTS_MAX_RANGE))
       };
 
       array.push(picture);
@@ -33,11 +38,11 @@
     var commentArray = [];
 
     for (var i = 0; i <= number; i++) {
-      var message = window.constant.MESSSGES[window.util.getRandomInt(0, window.constant.MESSSGES.length - 1)];
+      var message = MESSSGES[getRandomInt(0, MESSSGES.length - 1)];
       var comment = {
-        avatar: 'img/avatar-' + window.util.getRandomInt(COMMENTS_MIN_RANGE, COMMENTS_MAX_RANGE) + '.svg',
+        avatar: 'img/avatar-' + getRandomInt(COMMENTS_MIN_RANGE, COMMENTS_MAX_RANGE) + '.svg',
         message: message,
-        name: window.constant.NAMES[window.util.getRandomInt(0, window.constant.NAMES.length - 1)]
+        name: NAMES[getRandomInt(0, NAMES.length - 1)]
       };
 
       commentArray.push(comment);

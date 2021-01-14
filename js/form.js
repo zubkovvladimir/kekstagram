@@ -25,17 +25,26 @@
   var imgPreview = overlay.querySelector('.img-upload__preview').querySelector('img');
   var effectsList = overlay.querySelector('.effects__list');
 
+  var onRadioButtonClick = window.effect.onRadioButtonClick;
+  var onPinMousedown = window.slider.onPinMousedown;
+  var onTextHashtagsInput = window.validation.onTextHashtagsInput;
+  var removeFilter = window.effect.removeFilter;
+  // var upload = window.backend.upload;
+  var renderSuccess = window.message.renderSuccess;
+  var renderError = window.message.renderError;
+
+
   var addListeners = function () {
     buttonClose.addEventListener('click', onCloseButtonClick);
     document.addEventListener('keydown', onButtonKeydown);
 
-    effectsList.addEventListener('click', window.effect.onRadioButtonClick);
-    sliderPin.addEventListener('mousedown', window.slider.onPinMousedown);
+    effectsList.addEventListener('click', onRadioButtonClick);
+    sliderPin.addEventListener('mousedown', onPinMousedown);
 
     scaleSmaller.addEventListener('click', onScaleClick);
     scaleBigger.addEventListener('click', onScaleClick);
 
-    hashtagsInput.addEventListener('input', window.validation.check);
+    hashtagsInput.addEventListener('input', onTextHashtagsInput);
     form.addEventListener('submit', onButtonSubmit);
   };
 
@@ -43,13 +52,13 @@
     buttonClose.removeEventListener('click', onCloseButtonClick);
     document.removeEventListener('keydown', onButtonKeydown);
 
-    effectsList.removeEventListener('click', window.effect.onRadioButtonClick);
-    sliderPin.addEventListener('mousedown', window.slider.onPinMousedown);
+    effectsList.removeEventListener('click', onRadioButtonClick);
+    sliderPin.addEventListener('mousedown', onPinMousedown);
 
     scaleSmaller.removeEventListener('click', onScaleClick);
     scaleBigger.removeEventListener('click', onScaleClick);
 
-    hashtagsInput.removeEventListener('input', window.validation.check);
+    hashtagsInput.removeEventListener('input', onTextHashtagsInput);
     form.removeEventListener('submit', onButtonSubmit);
   };
 
@@ -89,7 +98,7 @@
     removeListeners();
 
     imgPreview.style.transform = '';
-    window.effect.removeFilter(imgPreview);
+    removeFilter(imgPreview);
     form.reset();
   };
 
@@ -108,10 +117,10 @@
   };
 
   var onButtonSubmit = function (evt) {
-    window.backend.upload(new FormData(form), function () {
+    upload(new FormData(form), function () {
       closeOverlay();
-      window.message.renderSuccess();
-    }, window.message.renderError);
+      renderSuccess();
+    }, renderError);
     evt.preventDefault();
   };
 

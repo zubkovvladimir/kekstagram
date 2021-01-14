@@ -121,6 +121,6 @@
     formUploadHashtags.CustomValidation.validityChecks = usernameValidityChecks;
 
     window.validation = {
-      check: checkValidity
+      onTextHashtagsInput: checkValidity
     }
 })();

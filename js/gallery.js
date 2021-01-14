@@ -11,7 +11,7 @@
     window.preview.addtListenersPicture(data);
   };
 
-  window.backend.load(renderPictures);
+  window.backend.load(renderPictures, window.message.renderError);
 })();
 
 

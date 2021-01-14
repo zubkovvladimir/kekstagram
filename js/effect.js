@@ -5,6 +5,8 @@
   var slider = overlay.querySelector('.img-upload__effect-level');
   var imgPreview = overlay.querySelector('.img-upload__preview').querySelector('img');
 
+  var setDefaultDepth = window.slider.setDefaultDepth;
+
   var onRadioButtonClick = function (evt) {
     var target = evt.target;
 
@@ -18,7 +20,7 @@
       removeFilter(imgPreview);
       slider.classList.remove('hidden');
       imgPreview.classList.add('effects__preview--' + effectType);
-      window.slider.setDefaultDepth();
+      setDefaultDepth();
     }
   };
 

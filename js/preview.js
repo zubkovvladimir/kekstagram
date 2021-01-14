@@ -16,6 +16,10 @@
   var likes = social.querySelector('.likes-count');
   var commentsContainer = social.querySelector('.social__comments');
 
+  var render = window.comment.render;
+  var isEscEvent = window.util.isEscEvent;
+  var isEnterEvent = window.util.isEnterEvent;
+
   var createFullPicture = function (picture) {
     img.src = picture.url;
     commentsCount.textContent = picture.comments.length;
@@ -23,7 +27,7 @@
     likes.textContent = picture.likes;
 
     commentsContainer.textContent = '';
-    commentsContainer.appendChild(window.comment.render(picture.comments));
+    commentsContainer.appendChild(render(picture.comments));
   };
 
   var showFullPicture = function (evt, picturesArray) {
@@ -62,7 +66,7 @@
   };
 
   var onPictureKeydown = function (evt) {
-    window.util.isEscEvent(evt, closePicture);
+    isEscEvent(evt, closePicture);
   };
 
   var addtListenersPicture = function (picturesArray) {
@@ -71,7 +75,7 @@
     };
 
     var onPictureEnterKeydown = function (evt) {
-      window.util.isEnterEvent(evt, showFullPicture, picturesArray);
+      isEnterEvent(evt, showFullPicture, picturesArray);
     };
 
     picturesContainer.addEventListener('click', onPictureClick);
