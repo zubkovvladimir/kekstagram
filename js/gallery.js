@@ -2,16 +2,44 @@
 
 (function () {
   var formUploadControl = document.querySelector('#upload-file');
+  var picturesContainer = document.querySelector('.pictures');
 
-  formUploadControl.addEventListener('change', window.edit.onUploadButtonChange);
+  var isEnterEvent = window.util.isEnterEvent;
+  var addID = window.util.addID;
+  var render = window.picture.render;
+  var show = window.preview.show;
+  var download = window.backend.download;
+  var renderError = window.popup.renderError;
+  var onUploadButtonChange = window.edit.onUploadButtonChange;
 
-  var renderPictures = function (data) {
-    window.util.addID(data);
-    window.picture.render(data);
-    window.preview.addtListenersPicture(data);
+  formUploadControl.addEventListener('change', onUploadButtonChange);
+
+  // добавит обработчики фотографий
+
+  var addtListenersPicture = function (picturesArray) {
+    var onPictureClick = function (evt) {
+      show(evt, picturesArray);
+    };
+
+    var onPictureEnterKeydown = function (evt) {
+      isEnterEvent(evt, show, picturesArray);
+    };
+
+    picturesContainer.addEventListener('click', onPictureClick);
+    picturesContainer.addEventListener('keydown', onPictureEnterKeydown);
   };
 
-  window.backend.load(renderPictures, window.message.renderError);
+  // отрисовка фотографий
+
+  var renderPictures = function (data) {
+    addID(data);
+    render(data);
+    addtListenersPicture(data);
+  };
+
+  // загрузка фотографий
+
+  download(renderPictures, renderError);
 })();
 
 

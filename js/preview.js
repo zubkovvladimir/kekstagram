@@ -3,7 +3,6 @@
 (function () {
   var body = document.body;
 
-  var picturesContainer = document.querySelector('.pictures');
   var bigPicture = document.querySelector('.big-picture');
   var img = bigPicture.querySelector('.big-picture__img').querySelector('img');
   var cancel = bigPicture.querySelector('.big-picture__cancel');
@@ -18,7 +17,8 @@
 
   var render = window.comment.render;
   var isEscEvent = window.util.isEscEvent;
-  var isEnterEvent = window.util.isEnterEvent;
+
+  // создаст модалку полноразмерного фото
 
   var createFullPicture = function (picture) {
     img.src = picture.url;
@@ -29,6 +29,8 @@
     commentsContainer.textContent = '';
     commentsContainer.appendChild(render(picture.comments));
   };
+
+  // отобразит модалку полноразмерного фото
 
   var showFullPicture = function (evt, picturesArray) {
     var target = evt.target;
@@ -53,6 +55,8 @@
     }
   };
 
+  // закроет модалку полноразмерного фото
+
   var closePicture = function () {
     body.classList.remove('modal-open');
     bigPicture.classList.add('hidden');
@@ -61,28 +65,19 @@
     document.removeEventListener('keydown', onPictureKeydown);
   };
 
+  // обработчик клика модалки
+
   var onClosePictureClick = function () {
     closePicture();
   };
+
+  // обработчик клавиши эскейп модалки
 
   var onPictureKeydown = function (evt) {
     isEscEvent(evt, closePicture);
   };
 
-  var addtListenersPicture = function (picturesArray) {
-    var onPictureClick = function (evt) {
-      showFullPicture(evt, picturesArray);
-    };
-
-    var onPictureEnterKeydown = function (evt) {
-      isEnterEvent(evt, showFullPicture, picturesArray);
-    };
-
-    picturesContainer.addEventListener('click', onPictureClick);
-    picturesContainer.addEventListener('keydown', onPictureEnterKeydown);
-  };
-
   window.preview = {
-    addtListenersPicture: addtListenersPicture
+    show: showFullPicture
   };
 })();

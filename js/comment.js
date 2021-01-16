@@ -1,7 +1,10 @@
 'use strict';
 
 (function () {
-  var COMMENT_AVATARR_WIDTH_HEIGHT = 35;
+  var COMMENT_AVATAR_WIDTH = 35;
+  var COMMENT_AVATAR_HEIGHT = 35;
+
+  // создание дом.элементов комментариев
 
   var createComment = function (comments) {
     var listItem = document.createElement('li');
@@ -17,12 +20,14 @@
 
     image.src = comments.avatar;
     image.alt = comments.name;
-    image.width = COMMENT_AVATARR_WIDTH_HEIGHT;
-    image.height = COMMENT_AVATARR_WIDTH_HEIGHT;
+    image.width = COMMENT_AVATAR_WIDTH;
+    image.height = COMMENT_AVATAR_HEIGHT;
     paragraph.textContent = comments.message;
 
     return listItem;
   };
+
+  // отрисовка дом.элементов комментариев
 
   var renderComments = function (comments) {
     var fragment = document.createDocumentFragment();

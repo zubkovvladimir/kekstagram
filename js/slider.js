@@ -13,36 +13,43 @@
   var imgPreview = overlay.querySelector('.img-upload__preview').querySelector('img');
   var sliderInput = overlay.querySelector('.effect-level__value');
 
+  // задает глубину эффекта по умолчанию
+
   var setDefaultDepth = function () {
     sliderInput.value = DEFAULT_LEVEL;
     sliderPin.style.left = DEFAULT_LEVEL + '%';
     sliderDepth.style.width = DEFAULT_LEVEL + '%';
   };
 
+  // задает глубину эффекта фото
+
   var setEffectDepth = function (depth) {
     var depthProportion = (depth / 100);
     var valueBrightness = depthProportion * (BRIGHTNESS_MAX - BRIGHTNESS_MIN) + 1;
+    var effect = imgPreview.classList.value.replace('effects__preview--', '');
 
-    switch (imgPreview.classList.value) {
-      case 'effects__preview--chrome':
+    switch (effect) {
+      case 'chrome':
         imgPreview.style.filter = 'grayscale(' + depthProportion + ')';
         break;
-      case 'effects__preview--sepia':
+      case 'sepia':
         imgPreview.style.filter = 'sepia(' + depthProportion + ')';
         break;
-      case 'effects__preview--marvin':
+      case 'marvin':
         imgPreview.style.filter = 'invert(' + depth + '%)';
         break;
-      case 'effects__preview--phobos':
+      case 'phobos':
         imgPreview.style.filter = 'blur(' + (depthProportion * BLUR_MAX) + 'px)';
         break;
-      case 'effects__preview--heat':
+      case 'heat':
         imgPreview.style.filter = 'brightness(' + valueBrightness + ')';
         break;
       default:
         imgPreview.style.filter = '';
     }
   };
+
+  // реализует перетаскивание слайдера
 
   var onPinMousedown = function (evt) {
     evt.preventDefault();

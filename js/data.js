@@ -9,10 +9,29 @@
   var COMMENTS_MIN_RANGE = 1;
   var COMMENTS_MAX_RANGE = 6;
 
+  var MESSSGES = [
+    'Всё отлично!',
+    'В целом всё неплохо. Но не всё.',
+    'Когда вы делаете фотографию, хорошо бы убирать палец из кадра. В конце концов это просто непрофессионально.',
+    'Моя бабушка случайно чихнула с фотоаппаратом в руках и у неё получилась фотография лучше.',
+    'Я поскользнулся на банановой кожуре и уронил фотоаппарат на кота и у меня получилась фотография лучше.',
+    'Лица у людей на фотке перекошены, как будто их избивают. Как можно было поймать такой неудачный момент?!'
+  ];
+
+  var NAMES = [
+    'Виктор',
+    'Евгений',
+    'Василий',
+    'Алексей',
+    'Алевтина',
+    'Александра',
+    'Алина',
+  ];
+
   var getArrayOfUniqueNumbers = window.util.getArrayOfUniqueNumbers;
   var getRandomInt = window.util.getRandomInt;
-  var MESSSGES = window.constant.MESSSGES;
-  var NAMES = window.constant.NAMES;
+
+  // создает моки фотографий
 
   var getPicturesData = function (number) {
     var arrayOfUniqueNumbers = getArrayOfUniqueNumbers(number);
@@ -33,6 +52,8 @@
 
     return array;
   };
+
+  // создает моки комментариев
 
   var getCommentsData = function (number) {
     var commentArray = [];

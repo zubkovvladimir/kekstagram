@@ -29,10 +29,11 @@
   var onPinMousedown = window.slider.onPinMousedown;
   var onTextHashtagsInput = window.validation.onTextHashtagsInput;
   var removeFilter = window.effect.removeFilter;
-  // var upload = window.backend.upload;
-  var renderSuccess = window.message.renderSuccess;
-  var renderError = window.message.renderError;
+  var upload = window.backend.upload;
+  var renderSuccess = window.popup.renderSuccess;
+  var renderError = window.popup.renderError;
 
+  // добавит все обработчики формы
 
   var addListeners = function () {
     buttonClose.addEventListener('click', onCloseButtonClick);
@@ -45,8 +46,10 @@
     scaleBigger.addEventListener('click', onScaleClick);
 
     hashtagsInput.addEventListener('input', onTextHashtagsInput);
-    form.addEventListener('submit', onButtonSubmit);
+    form.addEventListener('submit', onFormSubmit);
   };
+
+  // удалит все обработчики формы
 
   var removeListeners = function () {
     buttonClose.removeEventListener('click', onCloseButtonClick);
@@ -59,8 +62,10 @@
     scaleBigger.removeEventListener('click', onScaleClick);
 
     hashtagsInput.removeEventListener('input', onTextHashtagsInput);
-    form.removeEventListener('submit', onButtonSubmit);
+    form.removeEventListener('submit', onFormSubmit);
   };
+
+  // отобразит форму редактирования
 
   var onUploadButtonChange = function () {
     overlay.classList.remove('hidden');
@@ -69,6 +74,8 @@
 
     addListeners();
   };
+
+  // изменяет масштаб фото
 
   var onScaleClick = function (evt) {
     var target = evt.target;
@@ -91,6 +98,8 @@
     }
   };
 
+  // скрывает форму редактирования
+
   var closeOverlay = function () {
     overlay.classList.add('hidden');
     body.classList.remove('modal-open');
@@ -102,9 +111,13 @@
     form.reset();
   };
 
+  // обработчик клика кнопки закрытия формы
+
   var onCloseButtonClick = function () {
     closeOverlay();
   };
+
+  // обработчик клавиши эскейп, кнопки закрытия формы, вне элементов в фокусе
 
   var onButtonKeydown = function (evt) {
     var isEscNotActiveElement = evt.keyCode === ESC_KEYCODE
@@ -116,12 +129,12 @@
     }
   };
 
-  var onButtonSubmit = function (evt) {
-    upload(new FormData(form), function () {
-      closeOverlay();
-      renderSuccess();
-    }, renderError);
+  // отправка данных формы на сервер
+
+  var onFormSubmit = function (evt) {
     evt.preventDefault();
+    upload(new FormData(form), renderSuccess, renderError);
+    closeOverlay();
   };
 
   window.edit = {

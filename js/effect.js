@@ -7,6 +7,8 @@
 
   var setDefaultDepth = window.slider.setDefaultDepth;
 
+  // применяет эффекты для фото
+
   var onRadioButtonClick = function (evt) {
     var target = evt.target;
 
@@ -24,6 +26,8 @@
     }
   };
 
+  // удаляет класс эффекта на фото
+
   var removeClass = function (preview) {
     var classString = preview.classList.value;
     var classArray = classString.split(' ');
@@ -36,6 +40,8 @@
       }
     }
   };
+
+  // удаляет эффект на фото
 
   var removeFilter = function (preview) {
     preview.style.filter = '';

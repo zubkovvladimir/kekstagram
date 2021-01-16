@@ -4,6 +4,8 @@
   var picturesContainer = document.querySelector('.pictures');
   var pictureTemplate = document.querySelector('#picture').content.querySelector('.picture');
 
+  // создание дом.элементов комментариев
+
   var createPicture = function (picture) {
     var pictureElement = pictureTemplate.cloneNode(true);
 
@@ -15,6 +17,8 @@
 
     return pictureElement;
   };
+
+  // отрисовка дом.элементов фотографий
 
   var renderPictures = function (pictures) {
     var fragment = document.createDocumentFragment();

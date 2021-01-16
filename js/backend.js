@@ -2,51 +2,50 @@
 
 (function () {
   var URL = 'https://javascript.pages.academy/kekstagram';
+  var BUTTON_TEXT = 'закрыть';
+  var TIMEOUT = 10000;
+  var CONNECTION = 'Произошла ошибка соединения';
+  var TIMEOUT_TEXT = 'Запрос не успел выполниться за ';
+
+  var errorMap = {
+    400: 'Неверный запрос',
+    403: 'Доступ запрещен',
+    404: 'Ничего не найдено',
+    500: 'Ошибка сервера',
+    502: 'Неверный ответ сервера',
+    503: 'Сервер временно недоступен'
+  };
+
+  // создает запрос
 
   var createRequest = function (onSucces, onError) {
     var xhr = new XMLHttpRequest();
     xhr.responseType = 'json';
 
     var onLoad = function () {
-      switch (xhr.status) {
-        case 200:
-          onSucces(xhr.response);
-          break;
-        case 400:
-          onError('Ошибка ' + xhr.status + ': Неверный запрос', 'закрыть');
-          break;
-        case 403:
-          onError('Ошибка ' + xhr.status + ': Доступ запрещен', 'закрыть');
-          break;
-        case 404:
-          onError('Ошибка ' + xhr.status + ': Ничего не найдено', 'закрыть');
-          break;
-        case 500:
-          onError('Ошибка ' + xhr.status + ': Ошибка сервера', 'закрыть');
-          break;
-        case 502:
-          onError('Ошибка ' + xhr.status + ': Неверный ответ сервера', 'закрыть');
-          break;
-        case 503:
-          onError('Ошибка ' + xhr.status + ': Сервер временно недоступен', 'закрыть');
-          break;
-        default:
-          onError('Cтатус ответа: : ' + xhr.status + ' ' + xhr.statusText);
+      if (xhr.status === 200) {
+        onSucces(xhr.response);
+      } else if (errorMap[xhr.status]) {
+        onError('Ошибка ' + xhr.status + ': ' + errorMap[xhr.status], BUTTON_TEXT);
+      } else {
+        onError('Cтатус ответа: : ' + xhr.status + ' ' + xhr.statusText);
       }
     };
 
     xhr.addEventListener('load', onLoad);
     xhr.addEventListener('error', function () {
-      onError('Произошла ошибка соединения');
+      onError(CONNECTION, BUTTON_TEXT);
     });
     xhr.addEventListener('timeout', function () {
-      onError('Запрос не успел выполниться за ' + xhr.timeout + 'мс', 'закрыть');
+      onError(TIMEOUT_TEXT + xhr.timeout + 'мс', BUTTON_TEXT);
     });
 
-    xhr.timeout = 10000;
+    xhr.timeout = TIMEOUT;
 
     return xhr;
   };
+
+  //  отправка данных
 
   var upload = function (data, onSucces, onError) {
     var xhr = createRequest(onSucces, onError);
@@ -55,7 +54,9 @@
     xhr.send(data);
   };
 
-  var load = function (onSucces, onError) {
+  // получение данных
+
+  var download = function (onSucces, onError) {
     var xhr = createRequest(onSucces, onError);
 
     xhr.open('GET', URL + '/data');
@@ -63,7 +64,7 @@
   };
 
   window.backend = {
-    load: load,
-    upload: upload
+    upload: upload,
+    download: download
   };
 })();
