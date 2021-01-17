@@ -29,8 +29,8 @@
 
   // перерисовывает фотографии
 
-  var reRenderPictures = function (element, pictures) {
-    setActiveClass(element);
+  var reRenderPictures = function (pictures) {
+    // setActiveClass(element);
     removeElements(picturesContainer);
     addID(pictures);
     picturesContainer.appendChild(getFragment(pictures));
@@ -39,40 +39,49 @@
 
   // фильтрует и отображает 10 случайных и уникальных фото
 
-  var onRandomClick = function () {
+  var onRandomClick = window.debounce.set(function () {
     var uniqueArray = getArrayOfUniqueNumbers(RANDOM_PICTURES_AMOUNT);
 
     var randomPictures = uniqueArray.map(function (number) {
       return window.gallery.data[number];
     });
 
-    reRenderPictures(filterRandom, randomPictures);
-  };
+    reRenderPictures(randomPictures);
+  });
 
   // сортирует фото по кол-ву комментариев
 
-  var onDiscussedClick = function () {
+  var onDiscussedClick = window.debounce.set(function () {
     var copyData = window.gallery.data.slice();
 
     copyData.sort(function (a, b) {
       return b.comments.length - a.comments.length;
     });
 
-    reRenderPictures(filterDiscussed, copyData);
-  };
+    reRenderPictures(copyData);
+  });
 
   // отображает фото в исходном порядке
 
-  var onDefaultClick = function () {
-    reRenderPictures(filterDefault, window.gallery.data);
-  };
+  var onDefaultClick = window.debounce.set(function () {
+    reRenderPictures(window.gallery.data);
+  });
 
   // отображает блок с фильтрами
 
   var showFilters = function () {
-    filterDiscussed.addEventListener('click', onDiscussedClick);
-    filterRandom.addEventListener('click', onRandomClick);
-    filterDefault.addEventListener('click', onDefaultClick);
+    filterDiscussed.addEventListener('click', function () {
+      setActiveClass(filterDiscussed);
+      onDiscussedClick();
+    });
+    filterRandom.addEventListener('click', function () {
+      setActiveClass(filterRandom);
+      onRandomClick();
+    });
+    filterDefault.addEventListener('click', function () {
+      setActiveClass(filterDefault);
+      onDefaultClick();
+    });
 
     filters.classList.remove('img-filters--inactive');
   };
