@@ -53,11 +53,21 @@
     }
   };
 
+  // удаление элементов из контейнера
+
+  var removeElements = function (сontainer) {
+    var elements = сontainer.querySelectorAll('.picture');
+    elements.forEach(function (element) {
+      сontainer.removeChild(element);
+    });
+  };
+
   window.util = {
     getRandomInt: getRandomInt,
     getArrayOfUniqueNumbers: getArrayOfUniqueNumbers,
     isEnterEvent: isEnterEvent,
     isEscEvent: isEscEvent,
-    addID: addID
+    addID: addID,
+    removeElements: removeElements
   };
 })();

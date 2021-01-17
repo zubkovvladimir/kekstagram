@@ -5,7 +5,7 @@
 
   // создание дом элементов комментариев
 
-  var createPicture = function (picture) {
+  var getPicture = function (picture) {
     var pictureElement = pictureTemplate.cloneNode(true);
 
     pictureElement.querySelector('.picture__img').dataset.id = picture.id;
@@ -17,7 +17,19 @@
     return pictureElement;
   };
 
+  // создает фрагмент дом элементов фотографий
+
+  var getFragmentPictures = function (pictures) {
+    var fragment = document.createDocumentFragment();
+
+    for (var i = 0; i < pictures.length; i++) {
+      fragment.appendChild(getPicture(pictures[i]));
+    }
+
+    return fragment;
+  };
+
   window.picture = {
-    create: createPicture
+    getFragment: getFragmentPictures
   };
 })();
