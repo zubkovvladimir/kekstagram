@@ -1,45 +1,65 @@
 'use strict';
 
 (function () {
-  var formUploadControl = document.querySelector('#upload-file');
   var picturesContainer = document.querySelector('.pictures');
+  var formUploadControl = picturesContainer.querySelector('#upload-file');
 
-  var isEnterEvent = window.util.isEnterEvent;
+  var dataArray;
+
   var addID = window.util.addID;
-  var render = window.picture.render;
-  var show = window.preview.show;
   var download = window.backend.download;
   var renderError = window.popup.renderError;
   var onUploadButtonChange = window.edit.onUploadButtonChange;
+  var addtListenersPicture = window.preview.addtListenersPicture;
+  var create = window.picture.create;
 
   formUploadControl.addEventListener('change', onUploadButtonChange);
 
-  // добавит обработчики фотографий
+  // отрисовка дом элементов фотографий
 
-  var addtListenersPicture = function (picturesArray) {
-    var onPictureClick = function (evt) {
-      show(evt, picturesArray);
-    };
+  var appendPictures = function (pictures) {
+    var fragment = document.createDocumentFragment();
 
-    var onPictureEnterKeydown = function (evt) {
-      isEnterEvent(evt, show, picturesArray);
-    };
+    for (var i = 0; i < pictures.length; i++) {
+      fragment.appendChild(create(pictures[i]));
+    }
 
-    picturesContainer.addEventListener('click', onPictureClick);
-    picturesContainer.addEventListener('keydown', onPictureEnterKeydown);
+    picturesContainer.appendChild(fragment);
+  };
+
+  // сохраняет данные
+
+  var succesLoad = function (data) {
+    window.gallery.data = data.slice();
+    renderPictures(data);
   };
 
   // отрисовка фотографий
 
   var renderPictures = function (data) {
     addID(data);
-    render(data);
+    appendPictures(data);
     addtListenersPicture(data);
+  };
+
+  // удаление фотографий из контейнера
+
+  var removePictures = function (data) {
+    var elements = picturesContainer.querySelectorAll('.picture');
+    elements.forEach(function (element) {
+      picturesContainer.removeChild(element);
+    });
   };
 
   // загрузка фотографий
 
-  download(renderPictures, renderError);
+  download(succesLoad, renderError);
+
+  window.gallery = {
+    data: dataArray,
+    renderPictures: renderPictures,
+    removePictures: removePictures
+  };
 })();
 
 

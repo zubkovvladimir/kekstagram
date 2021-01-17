@@ -27,19 +27,7 @@
     return listItem;
   };
 
-  // отрисовка дом.элементов комментариев
-
-  var renderComments = function (comments) {
-    var fragment = document.createDocumentFragment();
-
-    for (var i = 0; i < comments.length; i++) {
-      fragment.appendChild(createComment(comments[i]));
-    }
-
-    return fragment;
-  };
-
   window.comment = {
-    render: renderComments
+    create: createComment
   };
 })();

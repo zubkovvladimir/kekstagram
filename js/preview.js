@@ -7,6 +7,7 @@
   var img = bigPicture.querySelector('.big-picture__img').querySelector('img');
   var cancel = bigPicture.querySelector('.big-picture__cancel');
 
+  var picturesContainer = document.querySelector('.pictures');
   var social = bigPicture.querySelector('.big-picture__social');
   var socialCaption = social.querySelector('.social__caption');
   var commentsLoader = social.querySelector('.comments-loader');
@@ -15,7 +16,8 @@
   var likes = social.querySelector('.likes-count');
   var commentsContainer = social.querySelector('.social__comments');
 
-  var render = window.comment.render;
+  var isEnterEvent = window.util.isEnterEvent;
+  var create = window.comment.create;
   var isEscEvent = window.util.isEscEvent;
 
   // создаст модалку полноразмерного фото
@@ -27,7 +29,19 @@
     likes.textContent = picture.likes;
 
     commentsContainer.textContent = '';
-    commentsContainer.appendChild(render(picture.comments));
+    commentsContainer.appendChild(renderComments(picture.comments));
+  };
+
+  // отрисовка дом элементов комментариев
+
+  var renderComments = function (comments) {
+    var fragment = document.createDocumentFragment();
+
+    for (var i = 0; i < comments.length; i++) {
+      fragment.appendChild(create(comments[i]));
+    }
+
+    return fragment;
   };
 
   // отобразит модалку полноразмерного фото
@@ -77,7 +91,23 @@
     isEscEvent(evt, closePicture);
   };
 
+  // добавит обработчики фотографий
+
+  var addtListenersPicture = function (picturesArray) {
+    var onPictureClick = function (evt) {
+      showFullPicture(evt, picturesArray);
+    };
+
+    var onPictureEnterKeydown = function (evt) {
+      isEnterEvent(evt, showFullPicture, picturesArray);
+    };
+
+    picturesContainer.addEventListener('click', onPictureClick);
+    picturesContainer.addEventListener('keydown', onPictureEnterKeydown);
+  };
+
   window.preview = {
-    show: showFullPicture
+    show: showFullPicture,
+    addtListenersPicture: addtListenersPicture
   };
 })();
