@@ -10,7 +10,7 @@
   var addID = window.util.addID;
   var download = window.backend.download;
   var renderError = window.popup.renderError;
-  var onUploadButtonChange = window.edit.onUploadButtonChange;
+  var onUploadButtonChange = window.form.onUploadButtonChange;
   var addtListenersPicture = window.preview.addtListenersPicture;
   var getFragment = window.picture.getFragment;
 
@@ -29,7 +29,6 @@
   // загрузка фотографий
 
   download(renderPictures, renderError);
-
   window.gallery = {
     data: dataArray
   };

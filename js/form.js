@@ -7,6 +7,8 @@
 
   var ESC_KEYCODE = 27;
 
+  var FILE_TYPES = ['gif', 'jpg', 'jpeg', 'png'];
+
   var body = document.body;
 
   var form = document.querySelector('.img-upload__form');
@@ -24,6 +26,9 @@
   var buttonClose = form.querySelector('#upload-cancel');
   var imgPreview = overlay.querySelector('.img-upload__preview').querySelector('img');
   var effectsList = overlay.querySelector('.effects__list');
+
+  var preview = document.querySelector('.img-upload__preview img');
+  var previewEffect = document.querySelectorAll('.effects__preview');
 
   var onRadioButtonClick = window.effect.onRadioButtonClick;
   var onPinMousedown = window.slider.onPinMousedown;
@@ -65,6 +70,30 @@
     form.removeEventListener('submit', onFormSubmit);
   };
 
+  var onControlChange = function (evt) {
+    var file = evt.target.files[0];
+    var fileName = file.name.toLowerCase();
+
+    var matches = FILE_TYPES.some(function (it) {
+      return fileName.endsWith(it);
+    });
+
+    var onLoad = function () {
+      preview.src = reader.result;
+      previewEffect.forEach(function (element) {
+        element.style.backgroundImage = 'url("' + reader.result + '")';
+      });
+    };
+
+    if (matches) {
+      var reader = new FileReader();
+
+      reader.addEventListener('load', onLoad);
+
+      reader.readAsDataURL(file);
+    }
+  };
+
   // отобразит форму редактирования
 
   var onUploadButtonChange = function () {
@@ -73,6 +102,7 @@
     body.classList.add('modal-open');
 
     addListeners();
+    onControlChange();
   };
 
   // изменяет масштаб фото
@@ -137,7 +167,7 @@
     closeOverlay();
   };
 
-  window.edit = {
+  window.form = {
     onUploadButtonChange: onUploadButtonChange
   };
 })();

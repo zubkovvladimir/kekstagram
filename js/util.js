@@ -14,12 +14,12 @@
 
   // возвращает массив случайных и уникальных чисел
 
-  var getArrayOfUniqueNumbers = function (number) {
+  var getArrayOfUniqueNumbers = function (range, amount) {
     var array = [];
     var randomNumber;
 
-    while (array.length < number) {
-      randomNumber = getRandomInt(1, number);
+    while (array.length < amount) {
+      randomNumber = getRandomInt(1, range);
 
       if (array.indexOf(randomNumber) === -1) {
         array.push(randomNumber);

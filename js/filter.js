@@ -1,6 +1,7 @@
 'use strict';
 
 (function () {
+  var RANDOM_PICTURES_MAX_RANGE = 24;
   var RANDOM_PICTURES_AMOUNT = 10;
 
   var filters = document.querySelector('.img-filters');
@@ -40,7 +41,7 @@
   // фильтрует и отображает 10 случайных и уникальных фото
 
   var onRandomClick = window.debounce.set(function () {
-    var uniqueArray = getArrayOfUniqueNumbers(RANDOM_PICTURES_AMOUNT);
+    var uniqueArray = getArrayOfUniqueNumbers(RANDOM_PICTURES_MAX_RANGE, RANDOM_PICTURES_AMOUNT);
 
     var randomPictures = uniqueArray.map(function (number) {
       return window.gallery.data[number];

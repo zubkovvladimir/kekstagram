@@ -1,9 +1,10 @@
 'use strict';
 
 (function () {
+  // устраняет "дребезг"
   var DEBOUNCE_INTERVAL = 500; // ms
 
-  var set = function (cb) {
+  var setDebounce = function (cb) {
     var lastTimeout = null;
 
     return function () {
@@ -18,6 +19,6 @@
   };
 
   window.debounce = {
-    set: set
+    set: setDebounce
   };
 })();
