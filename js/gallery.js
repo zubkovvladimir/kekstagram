@@ -10,11 +10,17 @@
   var addID = window.util.addID;
   var download = window.backend.download;
   var renderError = window.popup.renderError;
-  var onUploadButtonChange = window.form.onUploadButtonChange;
+  var render = window.form.render;
   var addtListenersPicture = window.preview.addtListenersPicture;
   var getFragment = window.picture.getFragment;
+  var сustomPreview = window.avatar.сustomPreview;
 
-  formUploadControl.addEventListener('change', onUploadButtonChange);
+  formUploadControl.addEventListener('change', function (evt) {
+    render(evt);
+    сustomPreview(evt);
+  });
+
+  // var onUploadButtonChange = ;
 
   // отрисовка фотографий
 
