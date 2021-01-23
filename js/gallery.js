@@ -13,28 +13,30 @@
   var render = window.form.render;
   var addtListenersPicture = window.preview.addtListenersPicture;
   var getFragment = window.picture.getFragment;
-  var сustomPreview = window.avatar.сustomPreview;
+  var сustomizePreview = window.upload.сustomizePreview;
 
-  formUploadControl.addEventListener('change', function (evt) {
+  // отображение формы редктирования фото
+
+  var onUploadButtonChange = function (evt) {
     render(evt);
-    сustomPreview(evt);
-  });
-
-  // var onUploadButtonChange = ;
+    сustomizePreview(evt);
+  };
 
   // отрисовка фотографий
 
-  var renderPictures = function (data) {
+  var initializationPage = function (data) {
     window.gallery.data = data.slice();
     addID(data);
     picturesContainer.appendChild(getFragment(data));
     addtListenersPicture(data);
     show();
+    formUploadControl.addEventListener('change', onUploadButtonChange);
   };
 
   // загрузка фотографий
 
-  download(renderPictures, renderError);
+  download(initializationPage, renderError);
+
   window.gallery = {
     data: dataArray
   };

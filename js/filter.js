@@ -15,6 +15,7 @@
   var addtListenersPicture = window.preview.addtListenersPicture;
   var getFragment = window.picture.getFragment;
   var getArrayOfUniqueNumbers = window.util.getArrayOfUniqueNumbers;
+  var set = window.debounce.set;
 
   // переключает класс активной кнопки
 
@@ -40,7 +41,7 @@
 
   // фильтрует и отображает 10 случайных и уникальных фото
 
-  var onRandomClick = window.debounce.set(function () {
+  var onRandomClick = set(function () {
     var uniqueArray = getArrayOfUniqueNumbers(RANDOM_PICTURES_MAX_RANGE, RANDOM_PICTURES_AMOUNT);
 
     var randomPictures = uniqueArray.map(function (number) {
@@ -52,7 +53,7 @@
 
   // сортирует фото по кол-ву комментариев
 
-  var onDiscussedClick = window.debounce.set(function () {
+  var onDiscussedClick = set(function () {
     var copyData = window.gallery.data.slice();
 
     copyData.sort(function (a, b) {
@@ -64,7 +65,7 @@
 
   // отображает фото в исходном порядке
 
-  var onDefaultClick = window.debounce.set(function () {
+  var onDefaultClick = set(function () {
     reRenderPictures(window.gallery.data);
   });
 

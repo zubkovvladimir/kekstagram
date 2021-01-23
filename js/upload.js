@@ -6,15 +6,19 @@
   var preview = document.querySelector('.img-upload__preview img');
   var previewEffect = document.querySelectorAll('.effects__preview');
 
-  // создание дом элементов комментариев
+  // загружает картинку в форму
 
-  var сustomPreview = function (evt) {
+  var сustomizePreview = function (evt) {
     var file = evt.target.files[0];
     var fileName = file.name.toLowerCase();
+
+    // проверка формата файла
 
     var matches = FILE_TYPES.some(function (it) {
       return fileName.endsWith(it);
     });
+
+    // добавляет адрес картинку в атрибуты тегов
 
     var onLoad = function () {
       preview.src = reader.result;
@@ -32,7 +36,7 @@
     }
   };
 
-  window.avatar = {
-    сustomPreview: сustomPreview
+  window.upload = {
+    сustomizePreview: сustomizePreview
   };
 })();

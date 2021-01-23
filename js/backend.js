@@ -22,6 +22,8 @@
     var xhr = new XMLHttpRequest();
     xhr.responseType = 'json';
 
+    // отображает попап по итогу загрузки данных
+
     var onLoad = function () {
       if (xhr.status === 200) {
         onSucces(xhr.response);

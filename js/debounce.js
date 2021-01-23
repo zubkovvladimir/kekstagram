@@ -1,8 +1,9 @@
 'use strict';
 
 (function () {
-  // устраняет "дребезг"
   var DEBOUNCE_INTERVAL = 500; // ms
+
+  // устраняет "дребезг"
 
   var setDebounce = function (cb) {
     var lastTimeout = null;

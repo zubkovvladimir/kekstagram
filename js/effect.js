@@ -20,8 +20,10 @@
       slider.classList.add('hidden');
     } else if (isEffect) {
       removeFilter(imgPreview);
+
       slider.classList.remove('hidden');
       imgPreview.classList.add('effects__preview--' + effectType);
+
       setDefaultDepth();
     }
   };
