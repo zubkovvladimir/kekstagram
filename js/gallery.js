@@ -25,8 +25,8 @@
   // отрисовка фотографий
 
   var initializationPage = function (data) {
-    window.gallery.data = data.slice();
     addID(data);
+    window.gallery.data = data.slice();
     picturesContainer.appendChild(getFragment(data));
     addtListenersPicture(data);
     show();

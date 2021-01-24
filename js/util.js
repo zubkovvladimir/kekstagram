@@ -15,18 +15,18 @@
   // возвращает массив случайных и уникальных чисел
 
   var getArrayOfUniqueNumbers = function (range, amount) {
-    var array = [];
+    var numbers = [];
     var randomNumber;
 
-    while (array.length < amount) {
+    while (numbers.length < amount) {
       randomNumber = getRandomInt(1, range);
 
-      if (array.indexOf(randomNumber) === -1) {
-        array.push(randomNumber);
+      if (numbers.indexOf(randomNumber) === -1) {
+        numbers.push(randomNumber);
       }
     }
 
-    return array;
+    return numbers;
   };
 
   // проверяет нажатие клавиши энтер

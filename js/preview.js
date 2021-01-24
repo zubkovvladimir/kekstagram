@@ -40,6 +40,7 @@
   var renderComments = function (comments, lengthElement) {
     var count;
     var fragment = document.createDocumentFragment();
+
     var isLength = lengthElement ? lengthElement : 0;
     var isLessThanCount = comments.length < COMMENTS_COUNT;
     var isMoreThanCount = comments.length >= COMMENTS_COUNT
@@ -47,11 +48,15 @@
     var isRemainderLessThanCount = (comments.length - isLength) < COMMENTS_COUNT;
 
     if (isLessThanCount) {
+
       count = comments.length;
       commentsLoader.classList.add('hidden');
+
     } else if (isMoreThanCount) {
+
       count = isLength + COMMENTS_COUNT;
       commentsLoader.classList.remove('hidden');
+
     } else if (isRemainderLessThanCount) {
       count = isLength + (comments.length - isLength);
     }
@@ -91,7 +96,7 @@
       createFullPicture(picture);
 
       commentsLoader.addEventListener('click', onLoaderClick);
-      cancel.addEventListener('click', onClosePictureClick);
+      bigPicture.addEventListener('click', onClosePictureClick);
       document.addEventListener('keydown', onPictureKeydown);
 
       body.classList.add('modal-open');
@@ -112,8 +117,14 @@
 
   // обработчик клика модалки
 
-  var onClosePictureClick = function () {
-    closePicture();
+  var onClosePictureClick = function (evt) {
+    var classList = evt.target.classList;
+    var isCancel = classList.contains('cancel');
+    var isOverlay = classList.contains('overlay');
+
+    if (isCancel || isOverlay) {
+      closePicture();
+    }
   };
 
   // обработчик клавиши эскейп модалки

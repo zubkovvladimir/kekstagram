@@ -16,7 +16,7 @@
   var CustomValidation = function () {
     this.invalidities = [];
     this.validityChecks = [];
-    this.uniqueArray = [];
+    this.uniqueInvalidities = [];
   };
 
   // опеределяет прототип метода валидации
@@ -26,9 +26,9 @@
       this.invalidities.push(message);
     },
     getInvalidities: function () {
-      this.uniqueArray = [...new Set(this.invalidities)];
+      this.uniqueInvalidities = [...new Set(this.invalidities)];
 
-      return this.uniqueArray.join('. \n');
+      return this.uniqueInvalidities.join('. \n');
     },
     checkValidity: function (input, arrayHashtags) {
       for (var i = 0; i < this.validityChecks.length; i++) {

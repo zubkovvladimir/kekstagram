@@ -7,24 +7,24 @@
   // создание дом.элементов комментариев
 
   var createComment = function (comments) {
-    var listItem = document.createElement('li');
-    var image = document.createElement('img');
-    var paragraph = document.createElement('p');
+    var element = document.createElement('li');
+    var img = document.createElement('img');
+    var text = document.createElement('p');
 
-    listItem.classList.add('social__comment');
-    image.classList.add('social__picture');
-    paragraph.classList.add('social__text');
+    element.classList.add('social__comment');
+    img.classList.add('social__picture');
+    text.classList.add('social__text');
 
-    listItem.appendChild(image);
-    listItem.appendChild(paragraph);
+    element.appendChild(img);
+    element.appendChild(text);
 
-    image.src = comments.avatar;
-    image.alt = comments.name;
-    image.width = COMMENT_AVATAR_WIDTH;
-    image.height = COMMENT_AVATAR_HEIGHT;
-    paragraph.textContent = comments.message;
+    img.src = comments.avatar;
+    img.alt = comments.name;
+    img.width = COMMENT_AVATAR_WIDTH;
+    img.height = COMMENT_AVATAR_HEIGHT;
+    text.textContent = comments.message;
 
-    return listItem;
+    return element;
   };
 
   window.comment = {

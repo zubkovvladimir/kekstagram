@@ -31,7 +31,7 @@
 
   // перерисовывает фотографии
 
-  var reRenderPictures = function (pictures) {
+  var rerenderPictures = function (pictures) {
     // setActiveClass(element);
     removeElements(picturesContainer);
     addID(pictures);
@@ -48,7 +48,7 @@
       return window.gallery.data[number];
     });
 
-    reRenderPictures(randomPictures);
+    rerenderPictures(randomPictures);
   });
 
   // сортирует фото по кол-ву комментариев
@@ -60,13 +60,13 @@
       return b.comments.length - a.comments.length;
     });
 
-    reRenderPictures(copyData);
+    rerenderPictures(copyData);
   });
 
   // отображает фото в исходном порядке
 
   var onDefaultClick = set(function () {
-    reRenderPictures(window.gallery.data);
+    rerenderPictures(window.gallery.data);
   });
 
   // отображает блок с фильтрами

@@ -35,7 +35,7 @@
 
   var getPicturesData = function (number) {
     var arrayOfUniqueNumbers = getArrayOfUniqueNumbers(number);
-    var array = [];
+    var pictures = [];
 
     for (var i = 0; i < number; i++) {
 
@@ -47,16 +47,16 @@
         comments: getCommentsData(getRandomInt(COMMENTS_MIN_RANGE, COMMENTS_MAX_RANGE))
       };
 
-      array.push(picture);
+      pictures.push(picture);
     }
 
-    return array;
+    return pictures;
   };
 
   // создает моки комментариев
 
   var getCommentsData = function (number) {
-    var commentArray = [];
+    var comments = [];
 
     for (var i = 0; i <= number; i++) {
       var message = MESSSGES[getRandomInt(0, MESSSGES.length - 1)];
@@ -66,10 +66,10 @@
         name: NAMES[getRandomInt(0, NAMES.length - 1)]
       };
 
-      commentArray.push(comment);
+      comments.push(comment);
     }
 
-    return commentArray;
+    return comments;
   };
 
   window.data = {
